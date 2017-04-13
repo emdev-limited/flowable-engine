@@ -24,7 +24,13 @@
 		<dependency>
             <groupId>org.flowable</groupId>
             <artifactId>flowable-engine</artifactId>
-        </dependency>
+            <exclusions>
+            	<exclusion>
+            		<groupId>com.sun.mail</groupId>
+            		<artifactId>javax.mail</artifactId>
+            	</exclusion>
+            </exclusions>
+		</dependency>
         <dependency>
             <groupId>org.flowable</groupId>
             <artifactId>flowable-content-engine</artifactId>
