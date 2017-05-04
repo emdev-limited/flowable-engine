@@ -858,6 +858,10 @@
 		<module>modules/flowable-dmn-api</module>
 		<module>modules/flowable-content-api</module>
 		<module>modules/flowable-engine</module>
+		
+		<!-- Modules required for Liferay Integration -->
+		<module>modules/flowable-idm-spring</module>
+		<module>modules/flowable-spring</module>
 	</modules>
 
 	<build>
