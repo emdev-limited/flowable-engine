@@ -10,7 +10,7 @@
 		<groupId>org.flowable</groupId>
 		<artifactId>flowable-root</artifactId>
 		<relativePath>../..</relativePath>
-		<version>6.0.1</version>
+		<version>6.0.1-emdev</version>
 	</parent>
 
 	<dependencies>
@@ -61,6 +61,18 @@
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-email</artifactId>
+			<exclusions>
+				<exclusion>
+					<groupId>com.sun.mail</groupId>
+					<artifactId>javax.mail</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		<dependency>
+		    <groupId>javax.mail</groupId>
+		    <artifactId>mail</artifactId>
+		    <version>1.4.1</version>
+		    <scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -189,6 +201,20 @@
 			<artifactId>catch-exception</artifactId>
 			<scope>test</scope>
 		</dependency>
+		
+		<!-- EmDev -->
+	    <dependency>
+			<groupId>com.liferay.portal</groupId>
+			<artifactId>com.liferay.portal.kernel</artifactId>
+			<version>2.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>commons-collections</groupId>
+			<artifactId>commons-collections</artifactId>
+			<version>3.2.2</version>
+			<scope>provided</scope>
+		</dependency>
 
 		<!-- Required for testing JTA -->
 		<dependency>
@@ -205,7 +231,7 @@
 			org.flowable.engine
 		</flowable.artifact>
 		<flowable.osgi.export.additional>
-			org.flowable.db.mapping.entity
+			org.flowable.db*
 		</flowable.osgi.export.additional>
 		<flowable.osgi.import.additional>
 			junit*;resolution:=optional,

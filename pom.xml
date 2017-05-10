@@ -14,7 +14,7 @@
 	</parent>
 
 	<packaging>pom</packaging>
-	<version>6.0.1</version>
+	<version>6.0.1-emdev</version>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.7</jdk.version>
@@ -475,6 +475,12 @@
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-email</artifactId>
 				<version>1.4</version>
+				<exclusions>
+					<exclusion>
+						<groupId>com.sun.mail</groupId>
+						<artifactId>javax.mail</artifactId>
+					</exclusion>
+				</exclusions>
 			</dependency>
 			<!-- Web service -->
 			<dependency>
@@ -863,6 +869,10 @@
 		<module>modules/flowable-dmn-api</module>
 		<module>modules/flowable-content-api</module>
 		<module>modules/flowable-engine</module>
+		
+		<!-- Modules required for Liferay Integration -->
+		<module>modules/flowable-idm-spring</module>
+		<module>modules/flowable-spring</module>
 	</modules>
 
 	<build>
