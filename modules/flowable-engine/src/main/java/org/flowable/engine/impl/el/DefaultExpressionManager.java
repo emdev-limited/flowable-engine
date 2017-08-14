@@ -15,18 +15,23 @@ package org.flowable.engine.impl.el;
 import java.util.List;
 import java.util.Map;
 
-import javax.el.ArrayELResolver;
-import javax.el.BeanELResolver;
-import javax.el.CompositeELResolver;
-import javax.el.ELContext;
-import javax.el.ELResolver;
-import javax.el.ExpressionFactory;
-import javax.el.ListELResolver;
-import javax.el.MapELResolver;
-import javax.el.ValueExpression;
-
+import org.flowable.engine.common.api.delegate.FlowableFunctionDelegate;
+import org.flowable.engine.common.impl.el.DynamicBeanPropertyELResolver;
+import org.flowable.engine.common.impl.el.ExpressionFactoryResolver;
+import org.flowable.engine.common.impl.el.FlowableElContext;
+import org.flowable.engine.common.impl.el.JsonNodeELResolver;
+import org.flowable.engine.common.impl.el.ParsingElContext;
+import org.flowable.engine.common.impl.el.ReadOnlyMapELResolver;
+import org.flowable.engine.common.impl.javax.el.ArrayELResolver;
+import org.flowable.engine.common.impl.javax.el.BeanELResolver;
+import org.flowable.engine.common.impl.javax.el.CompositeELResolver;
+import org.flowable.engine.common.impl.javax.el.ELContext;
+import org.flowable.engine.common.impl.javax.el.ELResolver;
+import org.flowable.engine.common.impl.javax.el.ExpressionFactory;
+import org.flowable.engine.common.impl.javax.el.ListELResolver;
+import org.flowable.engine.common.impl.javax.el.MapELResolver;
+import org.flowable.engine.common.impl.javax.el.ValueExpression;
 import org.flowable.engine.delegate.Expression;
-import org.flowable.engine.delegate.FlowableFunctionDelegate;
 import org.flowable.engine.delegate.VariableScope;
 import org.flowable.engine.impl.bpmn.data.ItemInstance;
 import org.flowable.engine.impl.delegate.invocation.DefaultDelegateInterceptor;
@@ -76,7 +81,7 @@ public class DefaultExpressionManager implements ExpressionManager {
     
     public DefaultExpressionManager(DelegateInterceptor delegateInterceptor, Map<Object, Object> beans, boolean initFactory) {
         this.delegateInterceptor = delegateInterceptor;
-        this.expressionFactory = ExpressionFactory.newInstance();
+        this.expressionFactory = ExpressionFactoryResolver.resolveExpressionFactory();
         this.beans = beans;
     }
 

@@ -12,9 +12,9 @@
  */
 package org.flowable.engine.impl.bpmn.behavior;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
+import java.util.List;
+import java.util.Map;
+
 import org.flowable.bpmn.model.FieldExtension;
 import org.flowable.bpmn.model.Task;
 import org.flowable.dmn.api.DmnRuleService;
@@ -24,15 +24,16 @@ import org.flowable.engine.common.api.FlowableIllegalArgumentException;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.DelegateHelper;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.flowable.engine.impl.context.Context;
+import org.flowable.engine.impl.context.BpmnOverrideContext;
 import org.flowable.engine.impl.el.ExpressionManager;
+import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.flowable.engine.repository.ProcessDefinition;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
-import java.util.List;
-import java.util.Map;
 
 public class DmnActivityBehavior extends TaskActivityBehavior {
 
@@ -62,11 +63,11 @@ public class DmnActivityBehavior extends TaskActivityBehavior {
             activeDecisionTableKey = fieldExtension.getStringValue();
         }
 
-        ProcessEngineConfigurationImpl processEngineConfiguration = Context.getProcessEngineConfiguration();
+        ProcessEngineConfigurationImpl processEngineConfiguration = CommandContextUtil.getProcessEngineConfiguration();
         ExpressionManager expressionManager = processEngineConfiguration.getExpressionManager();
 
         if (processEngineConfiguration.isEnableProcessDefinitionInfoCache()) {
-            ObjectNode taskElementProperties = Context.getBpmnOverrideElementProperties(task.getId(), execution.getProcessDefinitionId());
+            ObjectNode taskElementProperties = BpmnOverrideContext.getBpmnOverrideElementProperties(task.getId(), execution.getProcessDefinitionId());
             activeDecisionTableKey = getActiveValue(activeDecisionTableKey, DynamicBpmnConstants.DMN_TASK_DECISION_TABLE_KEY, taskElementProperties);
         }
 
@@ -86,11 +87,18 @@ public class DmnActivityBehavior extends TaskActivityBehavior {
 
         ProcessDefinition processDefinition = ProcessDefinitionUtil.getProcessDefinition(execution.getProcessDefinitionId());
 
-        DmnRuleService ruleService = processEngineConfiguration.getDmnEngineRuleService();
+        DmnRuleService ruleService = CommandContextUtil.getDmnRuleService();
 
-        List<Map<String, Object>> executionResult = ruleService.executeDecisionByKeyParentDeploymentIdAndTenantId(finaldecisionTableKeyValue,
-                processDefinition.getDeploymentId(), execution.getVariables(), execution.getTenantId());
-
+        List<Map<String, Object>> executionResult = ruleService.createExecuteDecisionBuilder()
+                        .decisionKey(finaldecisionTableKeyValue)
+                        .parentDeploymentId(processDefinition.getDeploymentId())
+                        .instanceId(execution.getProcessInstanceId())
+                        .executionId(execution.getId())
+                        .activityId(task.getId())
+                        .variables(execution.getVariables())
+                        .tenantId(execution.getTenantId())
+                        .execute();
+                
         setVariablesOnExecution(executionResult, finaldecisionTableKeyValue, execution, processEngineConfiguration.getObjectMapper());
 
         leave(execution);
@@ -100,7 +108,6 @@ public class DmnActivityBehavior extends TaskActivityBehavior {
         if (executionResult == null || executionResult.isEmpty()) {
             return;
         }
-        //TODO: make pluggable
 
         // multiple rule results
         // put on execution as JSON array; each entry contains output id (key) and output value (value)

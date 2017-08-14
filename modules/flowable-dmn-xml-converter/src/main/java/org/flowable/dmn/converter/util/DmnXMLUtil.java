@@ -16,7 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
@@ -41,7 +40,7 @@ import org.flowable.dmn.xml.constants.DmnXMLConstants;
  */
 public class DmnXMLUtil implements DmnXMLConstants {
 
-    private static Map<String, BaseChildElementParser> genericChildParserMap = new HashMap<String, BaseChildElementParser>();
+    private static Map<String, BaseChildElementParser> genericChildParserMap = new HashMap<>();
 
     static {
         addGenericParser(new InputClauseParser());
@@ -57,7 +56,7 @@ public class DmnXMLUtil implements DmnXMLConstants {
     }
 
     public static void addXMLLocation(DmnElement element, XMLStreamReader xtr) {
-        Location location = xtr.getLocation();
+        // Location location = xtr.getLocation();
         // element.setXmlRowNumber(location.getLineNumber());
         // element.setXmlColumnNumber(location.getColumnNumber());
     }
@@ -200,7 +199,7 @@ public class DmnXMLUtil implements DmnXMLConstants {
 
     protected static void writeExtensionElement(DmnExtensionElement extensionElement, Map<String, String> namespaceMap, XMLStreamWriter xtw) throws Exception {
         if (StringUtils.isNotEmpty(extensionElement.getName())) {
-            Map<String, String> localNamespaceMap = new HashMap<String, String>();
+            Map<String, String> localNamespaceMap = new HashMap<>();
             if (StringUtils.isNotEmpty(extensionElement.getNamespace())) {
                 if (StringUtils.isNotEmpty(extensionElement.getNamespacePrefix())) {
                     xtw.writeStartElement(extensionElement.getNamespacePrefix(), extensionElement.getName(), extensionElement.getNamespace());

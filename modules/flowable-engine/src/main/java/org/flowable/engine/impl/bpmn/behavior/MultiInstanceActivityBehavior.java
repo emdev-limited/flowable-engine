@@ -31,10 +31,11 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.ExecutionListener;
 import org.flowable.engine.delegate.Expression;
 import org.flowable.engine.impl.bpmn.helper.ErrorPropagation;
-import org.flowable.engine.impl.context.Context;
 import org.flowable.engine.impl.delegate.ActivityBehavior;
 import org.flowable.engine.impl.delegate.SubProcessActivityBehavior;
 import org.flowable.engine.impl.persistence.entity.ExecutionEntity;
+import org.flowable.engine.impl.persistence.entity.ExecutionEntityManager;
+import org.flowable.engine.impl.util.CommandContextUtil;
 import org.flowable.engine.impl.util.ProcessDefinitionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -82,29 +83,56 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         setInnerActivityBehavior(innerActivityBehavior);
     }
 
-    public void execute(DelegateExecution execution) {
+    public void execute(DelegateExecution delegateExecution) {
+        ExecutionEntity execution = (ExecutionEntity) delegateExecution;
         if (getLocalLoopVariable(execution, getCollectionElementIndexVariable()) == null) {
 
             int nrOfInstances = 0;
 
             try {
-                nrOfInstances = createInstances(execution);
+                nrOfInstances = createInstances(delegateExecution);
             } catch (BpmnError error) {
                 ErrorPropagation.propagateError(error, execution);
             }
 
             if (nrOfInstances == 0) {
-                super.leave(execution);
+                cleanupMiRoot(execution);
             }
 
         } else {
-            Context.getCommandContext().getHistoryManager().recordActivityStart((ExecutionEntity) execution);
-
+            // for synchronous, history was created already in ContinueMultiInstanceOperation,
+            // but that would lead to wrong timings for asynchronous which is why it's here
+            if (activity.isAsynchronous()) {
+                CommandContextUtil.getHistoryManager().recordActivityStart((ExecutionEntity) execution);
+            }
             innerActivityBehavior.execute(execution);
         }
     }
 
     protected abstract int createInstances(DelegateExecution execution);
+    
+    @Override
+    public void leave(DelegateExecution execution) {
+        cleanupMiRoot(execution);
+    }
+
+    protected void cleanupMiRoot(DelegateExecution execution) {
+        // Delete multi instance root and all child executions.
+        // Create a fresh execution to continue
+        
+        ExecutionEntity multiInstanceRootExecution = (ExecutionEntity) getMultiInstanceRootExecution(execution);
+        FlowElement flowElement = multiInstanceRootExecution.getCurrentFlowElement();
+        ExecutionEntity parentExecution = multiInstanceRootExecution.getParent();
+        
+        ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager();
+        executionEntityManager.deleteChildExecutions(multiInstanceRootExecution, "MI_END", false);
+        executionEntityManager.deleteRelatedDataForExecution(multiInstanceRootExecution, null);
+        executionEntityManager.delete(multiInstanceRootExecution);
+        
+        ExecutionEntity newExecution = executionEntityManager.createChildExecution(parentExecution);
+        newExecution.setCurrentFlowElement(flowElement);
+        super.leave(newExecution);
+    }
 
     protected void executeCompensationBoundaryEvents(FlowElement flowElement, DelegateExecution execution) {
 
@@ -120,7 +148,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
                 }
 
                 if (boundaryEvent.getEventDefinitions().get(0) instanceof CompensateEventDefinition) {
-                    ExecutionEntity childExecutionEntity = Context.getCommandContext().getExecutionEntityManager()
+                    ExecutionEntity childExecutionEntity = CommandContextUtil.getExecutionEntityManager()
                             .createChildExecution((ExecutionEntity) execution);
                     childExecutionEntity.setParentId(execution.getId());
                     childExecutionEntity.setCurrentFlowElement(boundaryEvent);
@@ -137,7 +165,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         Process process = getProcessDefinition(processDefinitionId);
 
         // This could be cached or could be done at parsing time
-        List<BoundaryEvent> results = new ArrayList<BoundaryEvent>(1);
+        List<BoundaryEvent> results = new ArrayList<>(1);
         Collection<BoundaryEvent> boundaryEvents = process.findFlowElementsOfType(BoundaryEvent.class, true);
         for (BoundaryEvent boundaryEvent : boundaryEvents) {
             if (boundaryEvent.getAttachedToRefId() != null && boundaryEvent.getAttachedToRefId().equals(flowElement.getId())) {
@@ -204,7 +232,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         }
 
         execution.setCurrentFlowElement(activity);
-        Context.getAgenda().planContinueMultiInstanceOperation((ExecutionEntity) execution);
+        CommandContextUtil.getAgenda().planContinueMultiInstanceOperation((ExecutionEntity) execution, loopCounter);
     }
 
     @SuppressWarnings("rawtypes")
@@ -297,15 +325,11 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         return (Integer) execution.getVariableLocal(variableName);
     }
 
-    protected void removeLocalLoopVariable(DelegateExecution execution, String variableName) {
-        execution.removeVariableLocal(variableName);
-    }
-
     /**
      * Since no transitions are followed when leaving the inner activity, it is needed to call the end listeners yourself.
      */
     protected void callActivityEndListeners(DelegateExecution execution) {
-        Context.getCommandContext().getProcessEngineConfiguration().getListenerNotificationHelper()
+        CommandContextUtil.getProcessEngineConfiguration().getListenerNotificationHelper()
                 .executeExecutionListeners(activity, execution, ExecutionListener.EVENTNAME_END);
     }
 

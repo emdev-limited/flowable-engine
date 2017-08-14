@@ -12,11 +12,6 @@
  */
 package org.flowable.engine.test.api.event;
 
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -33,6 +28,11 @@ import org.flowable.engine.impl.test.PluggableFlowableTestCase;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.task.Task;
 import org.flowable.engine.test.Deployment;
+
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * @author Joram Barrez
@@ -138,7 +138,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Activity started
-            if (i == 2 || i == 5 || i == 9 || i == 12) {
+            if (i == 2 || i == 5 || i == 8 || i == 12) {
                 assertNotNull(entry.getType());
                 assertEquals(FlowableEngineEventType.ACTIVITY_STARTED.name(), entry.getType());
                 assertNotNull(entry.getProcessDefinitionId());
@@ -181,7 +181,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Sequence flow taken
-            if (i == 4 || i == 7 || i == 8) {
+            if (i == 4 || i == 7 || i == 11) {
                 assertNotNull(entry.getType());
                 assertEquals(FlowableEngineEventType.SEQUENCEFLOW_TAKEN.name(), entry.getType());
                 assertNotNull(entry.getProcessDefinitionId());
@@ -222,7 +222,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Tasks
-            if (i == 11 || i == 14) {
+            if (i == 10 || i == 14) {
 
                 assertNotNull(entry.getType());
                 assertEquals(FlowableEngineEventType.TASK_CREATED.name(), entry.getType());
@@ -254,7 +254,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
 
             }
 
-            if (i == 10 || i == 13) {
+            if (i == 9 || i == 13) {
 
                 assertNotNull(entry.getType());
                 assertEquals(FlowableEngineEventType.TASK_ASSIGNED.name(), entry.getType());
@@ -292,7 +292,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
         // Completing two tasks
         for (Task task : taskService.createTaskQuery().list()) {
             Authentication.setAuthenticatedUserId(task.getAssignee());
-            Map<String, Object> varMap = new HashMap<String, Object>();
+            Map<String, Object> varMap = new HashMap<>();
             varMap.put("test", "test");
             taskService.complete(task.getId(), varMap);
             Authentication.setAuthenticatedUserId(null);
@@ -479,7 +479,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Activity started
-            if (i == 2 || i == 5 || i == 9 || i == 12) {
+            if (i == 2 || i == 5 || i == 8 || i == 12) {
                 assertEquals(entry.getType(), FlowableEngineEventType.ACTIVITY_STARTED.name());
                 Map<String, Object> data = objectMapper.readValue(entry.getData(), new TypeReference<HashMap<String, Object>>() {
                 });
@@ -495,7 +495,7 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Sequence flow taken
-            if (i == 4 || i == 7 || i == 8) {
+            if (i == 4 || i == 7 || i == 11) {
                 assertEquals(entry.getType(), FlowableEngineEventType.SEQUENCEFLOW_TAKEN.name());
                 Map<String, Object> data = objectMapper.readValue(entry.getData(), new TypeReference<HashMap<String, Object>>() {
                 });
@@ -511,14 +511,14 @@ public class DatabaseEventLoggerTest extends PluggableFlowableTestCase {
             }
 
             // Tasks
-            if (i == 11 || i == 14) {
+            if (i == 10 || i == 14) {
                 assertEquals(entry.getType(), FlowableEngineEventType.TASK_CREATED.name());
                 Map<String, Object> data = objectMapper.readValue(entry.getData(), new TypeReference<HashMap<String, Object>>() {
                 });
                 assertNull(data.get(Fields.TENANT_ID));
             }
 
-            if (i == 10 || i == 13) {
+            if (i == 9 || i == 13) {
                 assertEquals(entry.getType(), FlowableEngineEventType.TASK_ASSIGNED.name());
                 Map<String, Object> data = objectMapper.readValue(entry.getData(), new TypeReference<HashMap<String, Object>>() {
                 });

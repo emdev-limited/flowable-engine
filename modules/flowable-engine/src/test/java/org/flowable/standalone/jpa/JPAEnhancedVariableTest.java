@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  */
 public class JPAEnhancedVariableTest extends AbstractFlowableTestCase {
 
-    private static final Logger logger = LoggerFactory.getLogger(JPAEnhancedVariableTest.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(JPAEnhancedVariableTest.class);
     private static EntityManagerFactory entityManagerFactory;
     protected static ProcessEngine cachedProcessEngine;
 
@@ -109,12 +109,12 @@ public class JPAEnhancedVariableTest extends AbstractFlowableTestCase {
     public void testEnhancedEntityVariables() throws Exception {
         // test if enhancement is used
         if (FieldAccessJPAEntity.class == fieldEntity.getClass() || PropertyAccessJPAEntity.class == propertyEntity.getClass()) {
-            logger.warn("Entity enhancement is not used");
+            LOGGER.warn("Entity enhancement is not used");
             return;
         }
 
         // start process with enhanced jpa variables
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("fieldEntity", fieldEntity);
         params.put("propertyEntity", propertyEntity);
         ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByKey("JPAVariableProcess", params);
@@ -137,12 +137,12 @@ public class JPAEnhancedVariableTest extends AbstractFlowableTestCase {
     public void testEnhancedEntityListVariables() throws Exception {
         // test if enhancement is used
         if (FieldAccessJPAEntity.class == fieldEntity.getClass() || PropertyAccessJPAEntity.class == propertyEntity.getClass()) {
-            logger.warn("Entity enhancement is not used");
+            LOGGER.warn("Entity enhancement is not used");
             return;
         }
 
         // start process with lists of enhanced jpa variables
-        Map<String, Object> params = new HashMap<String, Object>();
+        Map<String, Object> params = new HashMap<>();
         params.put("list1", Arrays.asList(fieldEntity, fieldEntity));
         params.put("list2", Arrays.asList(propertyEntity, propertyEntity));
         ProcessInstance instance = processEngine.getRuntimeService().startProcessInstanceByKey("JPAVariableProcess", params);
@@ -185,7 +185,7 @@ public class JPAEnhancedVariableTest extends AbstractFlowableTestCase {
 
         // start process with mixed jpa entities in list
         try {
-            params = new HashMap<String, Object>();
+            params = new HashMap<>();
             params.put("list", Arrays.asList(fieldEntity, propertyEntity));
             instance = processEngine.getRuntimeService().startProcessInstanceByKey("JPAVariableProcess", params);
             fail();
