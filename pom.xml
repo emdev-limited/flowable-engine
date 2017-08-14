@@ -1514,4 +1514,18 @@
 		<connection>scm:git:git@github.com:flowable/flowable-engine.git</connection>
 		<developerConnection>scm:git:git@github.com:flowable/flowable-engine.git</developerConnection>
 	</scm>
+	
+	<!-- Added EMDEv Nexus for automatic deployment -->
+	<distributionManagement>
+		<repository>
+			<id>emdev-public</id>
+			<name>EmDev Public</name>
+			<url>http://build.emdev.ru/nexus/content/repositories/emdev-public</url>
+		</repository>
+		<snapshotRepository>
+			<id>snapshots</id>
+			<name>Public Snapshots</name>
+			<url>http://build.emdev.ru/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
 </project>
