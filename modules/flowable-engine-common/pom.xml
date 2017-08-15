@@ -33,6 +33,7 @@
             org.flowable.engine.common.impl.util,
             org.flowable.engine.common.impl.util.io,
             org.flowable.engine.common.runtime,
+			org.flowable.db*
         </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
             org.springframework*;resolution:=optional,
