@@ -99,10 +99,12 @@
             	</exclusion>
             </exclusions>
         </dependency>
+        <!-- EDMDEV - Removed dependency to flowable-idm-spring to avoid complex dependency to spring-security 
         <dependency>
             <groupId>org.flowable</groupId>
             <artifactId>flowable-idm-spring</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>

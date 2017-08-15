@@ -22,9 +22,9 @@ import org.flowable.idm.api.User;
 import org.flowable.idm.engine.IdmEngineConfiguration;
 import org.flowable.idm.engine.IdmEngines;
 import org.flowable.idm.engine.impl.authentication.ClearTextPasswordEncoder;
-import org.flowable.idm.engine.impl.authentication.PasswordSaltImpl;
+//import org.flowable.idm.engine.impl.authentication.PasswordSaltImpl;
 import org.flowable.idm.spring.authentication.SpringEncoder;
-import org.flowable.idm.spring.authentication.SpringSaltProvider;
+//import org.flowable.idm.spring.authentication.SpringSaltProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
@@ -93,6 +93,7 @@ public class SpringPasswordEncoderTest {
         assertTrue(autoWiredIdmIdentityService.checkPassword("johndoe", "xxx"));
         autoWiredIdmIdentityService.deleteUser("johndoe");
 
+        /*
         SystemWideSaltSource saltSource = new SystemWideSaltSource();
         saltSource.setSystemWideSalt("salt");
         autoWiredIdmIdmEngineConfiguration.setPasswordSalt(new PasswordSaltImpl(new SpringSaltProvider(saltSource)));
@@ -107,6 +108,7 @@ public class SpringPasswordEncoderTest {
         autoWiredIdmIdentityService.deleteUser("johndoe1");
         
         autoWiredIdmIdmEngineConfiguration.setPasswordEncoder(passwordEncoder);
+        */
     }
 
 

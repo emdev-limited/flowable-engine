@@ -16,7 +16,7 @@ import org.flowable.engine.common.impl.interceptor.EngineConfigurationConstants;
 import org.flowable.engine.impl.cfg.IdmEngineConfigurator;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.flowable.idm.engine.IdmEngineConfiguration;
-import org.flowable.idm.spring.SpringIdmEngineConfiguration;
+//import org.flowable.idm.spring.SpringIdmEngineConfiguration;
 import org.flowable.spring.SpringProcessEngineConfiguration;
 
 /**
@@ -24,6 +24,7 @@ import org.flowable.spring.SpringProcessEngineConfiguration;
  */
 public class SpringIdmEngineConfigurator extends IdmEngineConfigurator {
 
+	/*
     protected SpringIdmEngineConfiguration idmEngineConfiguration;
 
     @Override
@@ -46,5 +47,5 @@ public class SpringIdmEngineConfigurator extends IdmEngineConfigurator {
         this.idmEngineConfiguration = idmEngineConfiguration;
         return this;
     }
-
+	*/
 }
