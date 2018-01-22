@@ -23,7 +23,7 @@ public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 	    	if (StringUtils.isEmpty(sequenceFlow.getConditionExpression())) {
 	    		//Turn flow name into expression
 	    		if (!StringUtils.isEmpty(sequenceFlow.getName())) {
-	    			String expression = "${outputTransition == \"" + sequenceFlow.getName() + "\"}";
+	    			String expression = "${outputTransition == \"" + sequenceFlow.getName().trim() + "\"}";
 		    		sequenceFlow.setConditionExpression(expression);
 		            //do we need it??
 		            for (FlowableListener fl : sequenceFlow.getExecutionListeners()) {
