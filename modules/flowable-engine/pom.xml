@@ -202,6 +202,20 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- EmDev -->
+        <dependency>
+            <groupId>com.liferay.portal</groupId>
+            <artifactId>com.liferay.portal.kernel</artifactId>
+            <version>2.0.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>3.2.2</version>
+            <scope>provided</scope>
+        </dependency>
+
         <!-- Required for testing JTA -->
         <dependency>
             <groupId>org.codehaus.btm</groupId>
