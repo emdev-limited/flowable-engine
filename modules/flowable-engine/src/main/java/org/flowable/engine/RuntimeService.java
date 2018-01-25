@@ -21,12 +21,10 @@ import org.flowable.bpmn.model.FlowNode;
 import org.flowable.engine.common.api.FlowableException;
 import org.flowable.engine.common.api.FlowableIllegalArgumentException;
 import org.flowable.engine.common.api.FlowableObjectNotFoundException;
+import org.flowable.engine.common.api.delegate.event.FlowableEngineEventType;
 import org.flowable.engine.common.api.delegate.event.FlowableEvent;
 import org.flowable.engine.common.api.delegate.event.FlowableEventDispatcher;
 import org.flowable.engine.common.api.delegate.event.FlowableEventListener;
-import org.flowable.engine.delegate.VariableScope;
-import org.flowable.engine.delegate.event.FlowableEngineEventType;
-import org.flowable.engine.impl.persistence.entity.VariableInstance;
 import org.flowable.engine.runtime.ChangeActivityStateBuilder;
 import org.flowable.engine.runtime.DataObject;
 import org.flowable.engine.runtime.EventSubscriptionQuery;
@@ -38,9 +36,10 @@ import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.runtime.ProcessInstanceBuilder;
 import org.flowable.engine.runtime.ProcessInstanceQuery;
 import org.flowable.engine.task.Event;
-import org.flowable.engine.task.IdentityLink;
-import org.flowable.engine.task.IdentityLinkType;
 import org.flowable.form.model.FormModel;
+import org.flowable.identitylink.api.IdentityLink;
+import org.flowable.identitylink.service.IdentityLinkType;
+import org.flowable.variable.api.persistence.entity.VariableInstance;
 
 /**
  * 
@@ -1268,6 +1267,30 @@ public interface RuntimeService {
      * Create a {@link ChangeActivityStateBuilder}, that allows to set various options for changing the state of a process instance.
      */
     ChangeActivityStateBuilder createChangeActivityStateBuilder();
+    
+    /**
+     * Adds a new execution to a running multi-instance parent execution
+     * 
+     * @param activityId
+     *            id of the multi-instance activity (id attribute in the BPMN XML)
+     * @param parentExecutionId
+     *            can be the process instance id, in case there's one multi-instance execution for the provided activity id. 
+     *            In case of multiple multi-instance executions with the same activity id this can be a specific parent execution id.
+     * @param executionVariables
+     *            variables to be set on as local variable on the newly created multi-instance execution
+     * @return the newly created multi-instance execution
+     */                       
+    Execution addMultiInstanceExecution(String activityId, String parentExecutionId, Map<String, Object> executionVariables);
+    
+    /**
+     * Deletes a multi-instance execution
+     * 
+     * @param executionId
+     *            id of the multi-instance execution to be deleted
+     * @param executionIsCompleted
+     *            defines if the deleted execution should be marked as completed on the parent multi-instance execution
+     */
+    void deleteMultiInstanceExecution(String executionId, boolean executionIsCompleted);
 
     /** The all events related to the given Process Instance. */
     List<Event> getProcessInstanceEvents(String processInstanceId);

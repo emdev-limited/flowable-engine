@@ -1,9 +1,9 @@
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -26,6 +26,7 @@ import org.flowable.dmn.engine.impl.persistence.entity.DmnResourceEntity;
 import org.flowable.dmn.model.DmnDefinition;
 import org.flowable.engine.common.api.FlowableException;
 import org.flowable.engine.common.api.FlowableObjectNotFoundException;
+import org.flowable.engine.common.impl.persistence.deploy.DeploymentCache;
 
 /**
  * @author Tijs Rademakers
@@ -75,6 +76,7 @@ public class DeploymentManager {
     }
 
     public DecisionTableEntity findDeployedLatestDecisionByKey(String decisionKey) {
+
         DecisionTableEntity decisionTable = decisionTableEntityManager.findLatestDecisionTableByKey(decisionKey);
 
         if (decisionTable == null) {
@@ -99,7 +101,7 @@ public class DeploymentManager {
 
         if (decisionTable == null) {
             throw new FlowableObjectNotFoundException("no decisions deployed with key '" + decisionTableKey +
-                    "' for parent deployment id '" + parentDeploymentId + "'");
+                            "' for parent deployment id '" + parentDeploymentId + "'");
         }
         decisionTable = resolveDecisionTable(decisionTable).getDecisionTableEntity();
         return decisionTable;
@@ -113,7 +115,7 @@ public class DeploymentManager {
 
         if (decisionTable == null) {
             throw new FlowableObjectNotFoundException("no decisions deployed with key '" + decisionTableKey +
-                    "' for parent deployment id '" + parentDeploymentId + "' and tenant identifier " + tenantId);
+                            "' for parent deployment id '" + parentDeploymentId + "' and tenant identifier " + tenantId);
         }
         decisionTable = resolveDecisionTable(decisionTable).getDecisionTableEntity();
         return decisionTable;

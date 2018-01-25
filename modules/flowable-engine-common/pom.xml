@@ -7,12 +7,12 @@
     <name>Flowable - Engine Common</name>
     <artifactId>flowable-engine-common</artifactId>
 
-	<parent>
-		<groupId>org.flowable</groupId>
-		<artifactId>flowable-root</artifactId>
-		<relativePath>../..</relativePath>
-		<version>6.1.2-emdev</version>
-	</parent>
+    <parent>
+        <groupId>org.flowable</groupId>
+        <artifactId>flowable-root</artifactId>
+        <relativePath>../..</relativePath>
+        <version>6.2.1-emdev</version>
+    </parent>
 
     <properties>
         <flowable.artifact>
@@ -26,6 +26,7 @@
             org.flowable.engine.common.impl.db,
             org.flowable.engine.common.impl.el,
             org.flowable.engine.common.impl.interceptor,
+            org.flowable.engine.common.impl.javax.el,
             org.flowable.engine.common.impl.persistence,
             org.flowable.engine.common.impl.persistence.entity,
             org.flowable.engine.common.impl.persistence.entity.data,
@@ -37,6 +38,7 @@
         </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
             org.springframework*;resolution:=optional,
+            javax.transaction;resolution:=optional,
         </flowable.osgi.import.additional>
     </properties>
 
@@ -160,6 +162,10 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>joda-time</groupId>
+            <artifactId>joda-time</artifactId>
         </dependency>
         <dependency>
             <groupId>javax.persistence</groupId>
