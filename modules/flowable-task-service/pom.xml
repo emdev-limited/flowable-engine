@@ -81,7 +81,7 @@
             org.flowable.task.service
         </flowable.artifact>
         <flowable.osgi.export.additional>
-            org.flowable.task.service.db.mapping.entity
+            org.flowable.task.service.db*
         </flowable.osgi.export.additional>
     </properties>
 

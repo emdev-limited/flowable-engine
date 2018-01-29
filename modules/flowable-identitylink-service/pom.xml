@@ -83,7 +83,7 @@
 			org.flowable.identitylink.service
 		</flowable.artifact>
 		<flowable.osgi.export.additional>
-			org.flowable.identitylink.service.db.mapping.entity
+			org.flowable.identitylink.service.db*
 		</flowable.osgi.export.additional>
 	</properties>
 

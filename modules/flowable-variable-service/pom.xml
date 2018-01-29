@@ -83,7 +83,7 @@
             org.flowable.variable.service
         </flowable.artifact>
         <flowable.osgi.export.additional>
-            org.flowable.variable.service.db.mapping.entity
+            org.flowable.variable.service.db*
         </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
             javax.persistence*;resolution:=optional,

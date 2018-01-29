@@ -231,10 +231,12 @@
             org.flowable.engine
         </flowable.artifact>
         <flowable.osgi.export.additional>
-            org.flowable.db.mapping.entity
+            org.flowable.db*
         </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
             junit*;resolution:=optional,
+            javax.mail.internet; version="[1.4.0,2.0.0)",
+            javax.imageio;resolution:=optional,
             org.junit*;resolution:=optional,
             com.sun*;resolution:=optional,
             javax.activation*;resolution:=optional,
