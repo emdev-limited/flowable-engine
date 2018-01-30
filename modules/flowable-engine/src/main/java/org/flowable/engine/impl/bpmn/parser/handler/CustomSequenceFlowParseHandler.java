@@ -21,8 +21,12 @@ public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 	    
 	    if (sourceActivity != null && sourceActivity instanceof ExclusiveGateway) {
 	    	if (StringUtils.isEmpty(sequenceFlow.getConditionExpression())) {
+	    		// check - is it default Condition
+    			ExclusiveGateway sourceGateway = (ExclusiveGateway)sourceActivity;
+    			boolean isDefault = sequenceFlow.getId().equals(sourceGateway.getDefaultFlow());
+    			
 	    		//Turn flow name into expression
-	    		if (!StringUtils.isEmpty(sequenceFlow.getName())) {
+	    		if (!isDefault && !StringUtils.isEmpty(sequenceFlow.getName())) {
 	    			String expression = "${outputTransition == \"" + sequenceFlow.getName().trim() + "\"}";
 		    		sequenceFlow.setConditionExpression(expression);
 		            //do we need it??
