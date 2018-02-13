@@ -27,7 +27,7 @@ public class CommonDbSchemaManager extends ServiceSqlScriptBasedDbSchemaManager 
     
     @Override
     protected String getResourcesRootDirectory() {
-        return "org/flowable/db/common/";
+        return "org/flowable/common/db/";
     }
     
 }

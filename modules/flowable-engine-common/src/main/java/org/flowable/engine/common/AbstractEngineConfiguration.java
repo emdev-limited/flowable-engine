@@ -627,7 +627,7 @@ public abstract class AbstractEngineConfiguration {
     }
 
     public String pathToEngineDbProperties() {
-        return "org/flowable/db/common/properties/" + databaseType + ".properties";
+        return "org/flowable/common/db/properties/" + databaseType + ".properties";
     }
 
     public Configuration initMybatisConfiguration(Environment environment, Reader reader, Properties properties) {
