@@ -975,6 +975,7 @@
 		
 		<!-- Modules required for Liferay Integration -->
 		<module>modules/flowable-idm-spring</module>
+		<module>modules/flowable-spring-common</module>
 		<module>modules/flowable-spring</module>
 		<module>modules/flowable-json-converter</module>
 	</modules>
