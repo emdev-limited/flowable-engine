@@ -28,6 +28,10 @@ import org.flowable.engine.impl.persistence.entity.ByteArrayRef;
  * @author Marcus Klimstra (CGI)
  */
 public class ByteArrayRefTypeHandler extends TypeReference<ByteArrayRef> implements TypeHandler<ByteArrayRef> {
+	
+	public ByteArrayRefTypeHandler() {
+		super();
+	}
 
     @Override
     public void setParameter(PreparedStatement ps, int i, ByteArrayRef parameter, JdbcType jdbcType) throws SQLException {

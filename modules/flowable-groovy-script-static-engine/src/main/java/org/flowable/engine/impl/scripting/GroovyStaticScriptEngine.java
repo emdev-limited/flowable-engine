@@ -53,14 +53,14 @@ public class GroovyStaticScriptEngine extends GroovyScriptEngineImpl {
     @Override
     public Object eval(String script, ScriptContext ctx) throws ScriptException {
         COMPILE_OPTIONS.remove();
-        Map<String,ClassNode> variableTypes = new HashMap<String, ClassNode>();
-        for (Map.Entry<String,Object> entry : ctx.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
+        Map<String, ClassNode> variableTypes = new HashMap<>();
+        for (Map.Entry<String, Object> entry : ctx.getBindings(ScriptContext.ENGINE_SCOPE).entrySet()) {
             variableTypes.put(entry.getKey(),
                     ClassHelper.make(entry.getValue().getClass()));
         }
 
-        variableTypes.put("execution",ClassHelper.make(clazz));
-        Map<String,Object> options = new HashMap<String, Object>();
+        variableTypes.put("execution", ClassHelper.make(clazz));
+        Map<String, Object> options = new HashMap<>();
         options.put(VAR_TYPES, variableTypes);
         COMPILE_OPTIONS.set(options);
         Object ret = super.eval(script, ctx);
@@ -80,9 +80,9 @@ public class GroovyStaticScriptEngine extends GroovyScriptEngineImpl {
         ClassLoader ctxtLoader = Thread.currentThread().getContextClassLoader();
         try {
             Class<?> scriptClass = ctxtLoader.loadClass(Script.class.getName());
-            clazz = ctxtLoader.loadClass("org.flowable.engine.delegate.VariableScope");
+            clazz = ctxtLoader.loadClass("org.flowable.variable.api.delegate.VariableScope");
 
-            if(scriptClass == Script.class) {
+            if (scriptClass == Script.class) {
                 return ctxtLoader;
             }
         } catch (ClassNotFoundException var2) {
