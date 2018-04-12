@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
  * REST controller for managing the current user's account.
  */
 @RestController
+@RequestMapping("/app")
 public class ProcessInstanceClientResource extends AbstractClientResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessInstanceClientResource.class);
@@ -155,6 +156,17 @@ public class ProcessInstanceClientResource extends AbstractClientResource {
             clientService.changeActivityState(serverConfig, processInstanceId, changeStateBody);
         } catch (FlowableServiceException e) {
             LOGGER.error("Error changing activity state for process instance {}", processInstanceId, e);
+            throw new BadRequestException(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/rest/admin/process-instances/{processInstanceId}/decision-executions", method = RequestMethod.GET)
+    public JsonNode getDecisionExecutions(@PathVariable String processInstanceId) throws BadRequestException {
+        ServerConfig serverConfig = retrieveServerConfig(EndpointType.DMN);
+        try {
+            return clientService.getDecisionExecutions(serverConfig, processInstanceId);
+        } catch (FlowableServiceException e) {
+            LOGGER.error("Error getting decision executions {}", processInstanceId, e);
             throw new BadRequestException(e.getMessage());
         }
     }

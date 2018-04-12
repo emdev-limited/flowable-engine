@@ -32,6 +32,7 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     protected String caseDefinitionId;
     protected String caseInstanceId;
     protected String stageInstanceId;
+    protected String planItemInstanceId;
     protected String elementId;
     protected String planItemDefinitionId;
     protected String planItemDefinitionType;
@@ -42,6 +43,7 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     protected String startUserId;
     protected String referenceId;
     protected String referenceType;
+    protected boolean completeable;
     protected String tenantId;
     protected boolean withoutTenantId;
     
@@ -81,6 +83,15 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
             throw new FlowableIllegalArgumentException("Stage instance id is null");
         }
         this.stageInstanceId = stageInstanceId;
+        return this;
+    }
+    
+    @Override
+    public PlanItemInstanceQuery planItemInstanceId(String planItemInstanceId) {
+        if (planItemInstanceId == null) {
+            throw new FlowableIllegalArgumentException("Plan Item instance id is null");
+        }
+        this.planItemInstanceId = planItemInstanceId;
         return this;
     }
     
@@ -140,6 +151,21 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     }
     
     @Override
+    public PlanItemInstanceQuery planItemInstanceStateEnabled() {
+        return planItemInstanceState(PlanItemInstanceState.ENABLED);
+    }
+    
+    @Override
+    public PlanItemInstanceQuery planItemInstanceStateDisabled() {
+        return planItemInstanceState(PlanItemInstanceState.DISABLED);
+    }
+    
+    @Override
+    public PlanItemInstanceQuery planItemInstanceStateAsyncActive() {
+        return planItemInstanceState(PlanItemInstanceState.ASYNC_ACTIVE);
+    }
+    
+    @Override
     public PlanItemInstanceQuery planItemInstanceStateAvailable() {
         return planItemInstanceState(PlanItemInstanceState.AVAILABLE);
     }
@@ -164,11 +190,11 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     }
 
     @Override
-    public PlanItemInstanceQuery planItemInstanceStarterAfter(Date startedAfer) {
-        if (startedAfer == null) {
+    public PlanItemInstanceQuery planItemInstanceStartedAfter(Date startedAfter) {
+        if (startedAfter == null) {
             throw new FlowableIllegalArgumentException("StartedAfter is null");
         }
-        this.startedAfter = startedAfer;
+        this.startedAfter = startedAfter;
         return this;
     }
 
@@ -190,6 +216,12 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     @Override
     public PlanItemInstanceQuery planItemInstanceReferenceType(String referenceType) {
         this.referenceType = referenceType;
+        return this;
+    }
+    
+    @Override
+    public PlanItemInstanceQuery planItemCompleteable() {
+        this.completeable = true;
         return this;
     }
 
@@ -308,6 +340,10 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
     public String getStageInstanceId() {
         return stageInstanceId;
     }
+    
+    public String getPlanItemInstanceId() {
+        return planItemInstanceId;
+    }
 
     public String getElementId() {
         return elementId;
@@ -347,6 +383,10 @@ public class PlanItemInstanceQueryImpl extends AbstractVariableQueryImpl<PlanIte
 
     public String getReferenceType() {
         return referenceType;
+    }
+    
+    public boolean isCompleteable() {
+        return completeable;
     }
 
     public String getTenantId() {

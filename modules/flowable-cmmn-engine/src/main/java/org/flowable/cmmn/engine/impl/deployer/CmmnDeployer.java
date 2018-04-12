@@ -1,9 +1,9 @@
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -31,10 +31,10 @@ import org.flowable.cmmn.engine.impl.persistence.entity.deploy.CaseDefinitionCac
 import org.flowable.cmmn.engine.impl.util.CommandContextUtil;
 import org.flowable.cmmn.model.Case;
 import org.flowable.cmmn.model.CmmnModel;
-import org.flowable.engine.common.EngineDeployer;
 import org.flowable.engine.common.api.FlowableException;
 import org.flowable.engine.common.api.repository.EngineDeployment;
 import org.flowable.engine.common.api.repository.EngineResource;
+import org.flowable.engine.common.impl.EngineDeployer;
 import org.flowable.engine.common.impl.cfg.IdGenerator;
 import org.flowable.engine.common.impl.persistence.deploy.DeploymentCache;
 import org.slf4j.Logger;
@@ -70,7 +70,7 @@ public class CmmnDeployer implements EngineDeployer {
         verifyCaseDefinitionsDoNotShareKeys(parseResult.getAllCaseDefinitions());
         copyDeploymentValuesToCaseDefinitions(parseResult.getDeployment(), parseResult.getAllCaseDefinitions());
         setResourceNamesOnCaseDefinitions(parseResult);
-        
+
         createAndPersistNewDiagramsIfNeeded(parseResult);
         setCaseDefinitionDiagramNames(parseResult);
 
@@ -93,7 +93,7 @@ public class CmmnDeployer implements EngineDeployer {
         }
         return false;
     }
-    
+
     /**
      * Creates new diagrams for case definitions if the deployment is new, the case definition in question supports it, and the engine is configured to make new diagrams.
      *
@@ -111,7 +111,7 @@ public class CmmnDeployer implements EngineDeployer {
             }
         }
     }
-    
+
     /**
      * Updates all the case definition entities to have the correct diagram resource name. Must be called after createAndPersistNewDiagramsAsNeeded to ensure that any newly-created diagrams already
      * have their resources attached to the deployment.
@@ -145,9 +145,9 @@ public class CmmnDeployer implements EngineDeployer {
             }
             caseDefinition.setVersion(version);
             caseDefinition.setId(idGenerator.getNextId());
-            
+
             Case caseObject = parseResult.getCmmnCaseForCaseDefinition(caseDefinition);
-            if (caseObject.getFormKey() != null) {
+            if (caseObject.getPlanModel().getFormKey() != null) {
                 caseDefinition.setHasStartFormKey(true);
             }
         }

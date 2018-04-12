@@ -41,7 +41,7 @@ public class DmnDeploymentEntityImpl extends AbstractEntityNoRevision implements
     protected boolean isNew;
 
     /**
-     * Will only be used during actual deployment to pass deployed artifacts (eg process definitions). Will be null otherwise.
+     * Will only be used during actual deployment to pass deployed artifacts (eg decision tables). Will be null otherwise.
      */
     protected Map<Class<?>, List<Object>> deployedArtifacts;
 
@@ -168,6 +168,16 @@ public class DmnDeploymentEntityImpl extends AbstractEntityNoRevision implements
     
     @Override
     public String getKey() {
+        return null;
+    }
+    
+    @Override
+    public String getDerivedFrom() {
+        return null;
+    }
+
+    @Override
+    public String getDerivedFromRoot() {
         return null;
     }
 

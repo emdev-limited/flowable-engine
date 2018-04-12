@@ -29,8 +29,10 @@ public interface CmmnStencilConstants {
     String STENCIL_TASK_HTTP = "HttpTask";
     String STENCIL_TASK_CASE = "CaseTask";
     String STENCIL_TASK_PROCESS = "ProcessTask";
+    String STENCIL_TASK_SCRIPT = "ScriptTask";
     String STENCIL_MILESTONE = "Milestone";
     String STENCIL_TIMER_EVENT_LISTENER ="TimerEventListener";
+    String STENCIL_USER_EVENT_LISTENER ="UserEventListener";
 
     String STENCIL_ENTRY_CRITERION = "EntryCriterion";
     String STENCIL_EXIT_CRITERION = "ExitCriterion";
@@ -63,9 +65,24 @@ public interface CmmnStencilConstants {
     String PROPERTY_IS_BLOCKING = "isblocking";
     String PROPERTY_IS_BLOCKING_EXPRESSION = "isblockingexpression";
     
+    String PROPERTY_IS_AUTOCOMPLETE = "autocompleteenabled";
+    String PROPERTY_AUTOCOMPLETE_CONDITION = "autocompletecondition";
+    
+    String PROPERTY_IS_ASYNC = "isasync";
+    String PROPERTY_IS_EXCLUSIVE = "isexclusive";
+    
+    String PROPERTY_REQUIRED_ENABLED = "requiredenabled";
+    String PROPERTY_REQUIRED_RULE_CONDITION = "requiredrulecondition";
+    
     String PROPERTY_REPETITION_ENABLED = "repetitionenabled";
     String PROPERTY_REPETITION_RULE_CONDITION = "repetitionrulecondition";
     String PROPERTY_REPETITION_RULE_VARIABLE_NAME = "repetitioncountervariablename";
+    
+    String PROPERTY_MANUAL_ACTIVATION_ENABLED = "manualactivationenabled";
+    String PROPERTY_MANUAL_ACTIVATION_RULE_CONDITION = "manualactivationrulecondition";
+    
+    String PROPERTY_COMPLETION_NEUTRAL_ENABLED = "completionneutralenabled";
+    String PROPERTY_COMPLETION_NEUTRAL_RULE_CONDITION = "completionneutralrulecondition";
 
     String PROPERTY_USERTASK_ASSIGNMENT = "usertaskassignment";
     String PROPERTY_USERTASK_PRIORITY = "prioritydefinition";
@@ -86,8 +103,8 @@ public interface CmmnStencilConstants {
     String PROPERTY_SERVICETASK_FIELD_STRING = "string";
     String PROPERTY_SERVICETASK_FIELD_EXPRESSION = "expression";
 
-    String PROPERTY_SCRIPT_FORMAT = "scriptformat";
-    String PROPERTY_SCRIPT_TEXT = "scripttext";
+    String PROPERTY_SCRIPT_TASK_SCRIPT_FORMAT = "scriptformat";
+    String PROPERTY_SCRIPT_TASK_SCRIPT_TEXT = "scripttext";
 
     String PROPERTY_DECISIONTABLE_REFERENCE = "decisiontaskdecisiontablereference";
     String PROPERTY_DECISIONTABLE_REFERENCE_ID = "decisiontablereferenceid";
@@ -117,6 +134,8 @@ public interface CmmnStencilConstants {
     String PROPERTY_HTTPTASK_SAVE_REQUEST_VARIABLES = "httptasksaverequestvariables";
     String PROPERTY_HTTPTASK_SAVE_RESPONSE_PARAMETERS = "httptasksaveresponseparameters";
     String PROPERTY_HTTPTASK_RESULT_VARIABLE_PREFIX = "httptaskresultvariableprefix";
+    String PROPERTY_HTTPTASK_SAVE_RESPONSE_TRANSIENT = "httptasksaveresponseparameterstransient";
+    String PROPERTY_HTTPTASK_SAVE_RESPONSE_AS_JSON = "httptasksaveresponseasjson";
 
     String PROPERTY_TIMER_EXPRESSION = "timerexpression";
     String PROPERTY_TIMER_START_TRIGGER_SOURCE_REF = "timerstarttriggersourceref";

@@ -12,8 +12,6 @@
  */
 package org.flowable.app.service.runtime;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.app.model.runtime.CaseInstanceRepresentation;
 import org.flowable.app.model.runtime.CreateCaseInstanceRepresentation;
@@ -29,6 +27,7 @@ import org.flowable.cmmn.api.history.HistoricCaseInstance;
 import org.flowable.cmmn.api.repository.CaseDefinition;
 import org.flowable.cmmn.api.runtime.CaseInstance;
 import org.flowable.content.api.ContentService;
+import org.flowable.engine.common.api.scope.ScopeTypes;
 import org.flowable.form.api.FormRepositoryService;
 import org.flowable.form.api.FormService;
 import org.flowable.idm.api.User;
@@ -52,7 +51,7 @@ public class FlowableCaseInstanceService {
 
     @Autowired
     protected CmmnRuntimeService cmmnRuntimeService;
-    
+
     @Autowired
     protected CmmnHistoryService cmmnHistoryService;
 
@@ -74,7 +73,7 @@ public class FlowableCaseInstanceService {
     @Autowired
     protected UserCache userCache;
 
-    public CaseInstanceRepresentation getCaseInstance(String caseInstanceId, HttpServletResponse response) {
+    public CaseInstanceRepresentation getCaseInstance(String caseInstanceId) {
 
         HistoricCaseInstance caseInstance = cmmnHistoryService.createHistoricCaseInstanceQuery().caseInstanceId(caseInstanceId).singleResult();
 
@@ -102,7 +101,10 @@ public class FlowableCaseInstanceService {
 
         CaseInstance caseInstance = cmmnRuntimeService.createCaseInstanceBuilder()
                         .caseDefinitionId(startRequest.getCaseDefinitionId())
-                        .name(startRequest.getName()).start();
+                        .name(startRequest.getName())
+                        .outcome(startRequest.getOutcome())
+                        .variables(startRequest.getValues())
+                        .startWithForm();
 
         User user = null;
         if (caseInstance.getStartUserId() != null) {
@@ -133,8 +135,8 @@ public class FlowableCaseInstanceService {
                 throw new NotFoundException("Process with id: " + processInstanceId + " is already completed and can't be deleted");
             }*/
 
-            // Delete all content related to the process instance
-            //contentService.deleteContentItemsByProcessInstanceId(processInstanceId);
+            // Delete all content related to the case instance
+            contentService.deleteContentItemsByScopeIdAndScopeType(caseInstanceId, ScopeTypes.CMMN);
 
             // Finally, delete all history for this instance in the engine
             cmmnHistoryService.deleteHistoricCaseInstance(caseInstanceId);

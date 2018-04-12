@@ -11,7 +11,7 @@
 		<groupId>org.flowable</groupId>
 		<artifactId>flowable-root</artifactId>
 		<relativePath>../..</relativePath>
-		<version>6.2.1-emdev</version>
+		<version>6.3.0-emdev</version>
 	</parent>
 
 	<properties>
@@ -21,6 +21,7 @@
 		<flowable.osgi.export.additional>
 			org.flowable.engine.common.api,
 			org.flowable.engine.common.api.delegate.event,
+            org.flowable.engine.common.api.history,
 			org.flowable.engine.common.api.io,
 			org.flowable.engine.common.api.management,
 			org.flowable.engine.common.api.query,

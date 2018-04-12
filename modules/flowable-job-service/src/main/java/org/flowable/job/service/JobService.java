@@ -33,9 +33,15 @@ public interface JobService {
     
     List<JobEntity> findJobsByExecutionId(String executionId);
     
+    List<SuspendedJobEntity> findSuspendedJobsByExecutionId(String executionId);
+    
+    List<DeadLetterJobEntity> findDeadLetterJobsByExecutionId(String executionId);
+    
     List<JobEntity> findJobsByProcessInstanceId(String processInstanceId);
     
     List<SuspendedJobEntity> findSuspendedJobsByProcessInstanceId(String processInstanceId);
+    
+    List<DeadLetterJobEntity> findDeadLetterJobsByProcessInstanceId(String processInstanceId);
     
     AbstractRuntimeJobEntity activateSuspendedJob(SuspendedJobEntity job);
     

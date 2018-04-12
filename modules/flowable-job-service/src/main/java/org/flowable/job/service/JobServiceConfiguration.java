@@ -13,7 +13,8 @@
 package org.flowable.job.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.flowable.engine.common.AbstractServiceConfiguration;
+
+import org.flowable.engine.common.impl.AbstractServiceConfiguration;
 import org.flowable.engine.common.impl.calendar.BusinessCalendarManager;
 import org.flowable.engine.common.impl.el.ExpressionManager;
 import org.flowable.engine.common.impl.history.HistoryLevel;
@@ -116,6 +117,7 @@ public class JobServiceConfiguration extends AbstractServiceConfiguration {
 
     protected List<JobProcessor> jobProcessors;
     protected List<HistoryJobProcessor> historyJobProcessors;
+    protected InternalJobParentStateResolver jobParentStateResolver;
 
     // init
     // /////////////////////////////////////////////////////////////////////
@@ -493,4 +495,11 @@ public class JobServiceConfiguration extends AbstractServiceConfiguration {
         return this;
     }
 
+    public void setJobParentStateResolver(InternalJobParentStateResolver jobParentStateResolver) {
+        this.jobParentStateResolver = jobParentStateResolver;
+    }
+
+    public InternalJobParentStateResolver getJobParentStateResolver() {
+        return jobParentStateResolver;
+    }
 }

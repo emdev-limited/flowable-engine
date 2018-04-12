@@ -60,7 +60,6 @@ public class DefaultJobManager implements JobManager {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DefaultJobManager.class);
 
-    public static final String ASYNC_JOB_TYPE = "async-continuation";
     public static final String CYCLE_TYPE = "cycle";
 
     protected JobServiceConfiguration jobServiceConfiguration;
@@ -392,8 +391,15 @@ public class DefaultJobManager implements JobManager {
     }
 
     protected void hintAsyncExecutor(JobEntity job) {
+        
+        // Verify that correct properties have been set when the async executor will be hinted
+        if (job.getLockOwner() == null || job.getLockExpirationTime() == null) {
+            createAsyncJob(job, job.isExclusive());
+        }
+        
         if (Context.getTransactionContext() != null) {
-            JobAddedTransactionListener jobAddedTransactionListener = new JobAddedTransactionListener(job, getAsyncExecutor());
+            JobAddedTransactionListener jobAddedTransactionListener = new JobAddedTransactionListener(job, getAsyncExecutor(),
+                            CommandContextUtil.getJobServiceConfiguration().getCommandExecutor());
             Context.getTransactionContext().addTransactionListener(TransactionState.COMMITTED, jobAddedTransactionListener);
         } else {
             AsyncJobAddedNotification jobAddedNotification = new AsyncJobAddedNotification(job, getAsyncExecutor());
@@ -455,7 +461,6 @@ public class DefaultJobManager implements JobManager {
         jobEntity.setRevision(1);
         jobEntity.setRetries(jobServiceConfiguration.getAsyncExecutorNumberOfRetries());
         jobEntity.setExclusive(exclusive);
-        jobEntity.setJobHandlerType(ASYNC_JOB_TYPE);
     }
 
     protected JobEntity createExecutableJobFromOtherJob(AbstractRuntimeJobEntity job) {

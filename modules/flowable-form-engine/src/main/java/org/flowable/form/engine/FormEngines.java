@@ -28,8 +28,8 @@ import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.flowable.engine.common.EngineInfo;
 import org.flowable.engine.common.api.FlowableException;
+import org.flowable.engine.common.impl.EngineInfo;
 import org.flowable.engine.common.impl.util.ReflectUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -97,7 +97,7 @@ public abstract class FormEngines {
     protected static void initFormEngineFromSpringResource(URL resource) {
         try {
             Class<?> springConfigurationHelperClass = ReflectUtil.loadClass("org.flowable.form.spring.SpringFormConfigurationHelper");
-            Method method = springConfigurationHelperClass.getDeclaredMethod("buildContentEngine", new Class<?>[] { URL.class });
+            Method method = springConfigurationHelperClass.getDeclaredMethod("buildFormEngine", new Class<?>[] { URL.class });
             FormEngine formEngine = (FormEngine) method.invoke(null, new Object[] { resource });
 
             String formEngineName = formEngine.getName();

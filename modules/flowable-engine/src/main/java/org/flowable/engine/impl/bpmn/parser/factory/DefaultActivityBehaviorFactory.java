@@ -51,6 +51,7 @@ import org.flowable.bpmn.model.Transaction;
 import org.flowable.bpmn.model.UserTask;
 import org.flowable.engine.common.api.FlowableException;
 import org.flowable.engine.common.api.delegate.Expression;
+import org.flowable.engine.common.impl.scripting.ScriptingEngines;
 import org.flowable.engine.delegate.BusinessRuleTaskDelegate;
 import org.flowable.engine.impl.bpmn.behavior.AbstractBpmnActivityBehavior;
 import org.flowable.engine.impl.bpmn.behavior.AdhocSubProcessActivityBehavior;
@@ -104,7 +105,6 @@ import org.flowable.engine.impl.bpmn.helper.DefaultClassDelegateFactory;
 import org.flowable.engine.impl.bpmn.parser.FieldDeclaration;
 import org.flowable.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.flowable.engine.impl.delegate.ActivityBehavior;
-import org.flowable.engine.impl.scripting.ScriptingEngines;
 
 /**
  * Default implementation of the {@link ActivityBehaviorFactory}. Used when no custom {@link ActivityBehaviorFactory} is injected on the {@link ProcessEngineConfigurationImpl}.
@@ -166,6 +166,7 @@ public class DefaultActivityBehaviorFactory extends AbstractBehaviorFactory impl
     public ClassDelegate createClassDelegateServiceTask(ServiceTask serviceTask) {
         return classDelegateFactory.create(serviceTask.getId(), serviceTask.getImplementation(),
                 createFieldDeclarations(serviceTask.getFieldExtensions()),
+                serviceTask.isTriggerable(),
                 getSkipExpressionFromServiceTask(serviceTask), serviceTask.getMapExceptions());
     }
 
@@ -174,14 +175,13 @@ public class DefaultActivityBehaviorFactory extends AbstractBehaviorFactory impl
         Expression delegateExpression = expressionManager.createExpression(serviceTask.getImplementation());
         return new ServiceTaskDelegateExpressionActivityBehavior(serviceTask.getId(), delegateExpression,
                 getSkipExpressionFromServiceTask(serviceTask), createFieldDeclarations(serviceTask.getFieldExtensions()),
-                serviceTask.getMapExceptions());
+                serviceTask.getMapExceptions(), serviceTask.isTriggerable());
     }
 
     @Override
     public ServiceTaskExpressionActivityBehavior createServiceTaskExpressionActivityBehavior(ServiceTask serviceTask) {
         Expression expression = expressionManager.createExpression(serviceTask.getImplementation());
-        return new ServiceTaskExpressionActivityBehavior(serviceTask.getId(), expression,
-                getSkipExpressionFromServiceTask(serviceTask), serviceTask.getResultVariableName(), serviceTask.getMapExceptions());
+        return new ServiceTaskExpressionActivityBehavior(serviceTask, expression, getSkipExpressionFromServiceTask(serviceTask));
     }
 
     @Override
@@ -275,7 +275,7 @@ public class DefaultActivityBehaviorFactory extends AbstractBehaviorFactory impl
 
             if (theClass == null) {
                 // Default Camel behavior class
-                theClass = Class.forName("org.flowable.camel.impl.CamelBehaviorDefaultImpl");
+                theClass = Class.forName(getDefaultCamelBehaviorClassName());
             }
 
             List<FieldDeclaration> fieldDeclarations = createFieldDeclarations(fieldExtensions);
@@ -287,6 +287,10 @@ public class DefaultActivityBehaviorFactory extends AbstractBehaviorFactory impl
             throw new FlowableException("Could not find org.flowable.camel.CamelBehavior: ", e);
         }
     }
+
+	protected String getDefaultCamelBehaviorClassName() {
+		return "org.flowable.camel.impl.CamelBehaviorDefaultImpl";
+	}
 
     private void addExceptionMapAsFieldDeclaration(List<FieldDeclaration> fieldDeclarations, List<MapExceptionEntry> mapExceptions) {
         FieldDeclaration exceptionMapsFieldDeclaration = new FieldDeclaration(EXCEPTION_MAP_FIELD, mapExceptions.getClass().toString(), mapExceptions);

@@ -15,8 +15,10 @@ package org.flowable.engine.impl.bpmn.behavior;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.flowable.bpmn.model.Activity;
 import org.flowable.bpmn.model.BoundaryEvent;
@@ -145,8 +147,9 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         ExecutionEntity parentExecution = multiInstanceRootExecution.getParent();
         
         ExecutionEntityManager executionEntityManager = CommandContextUtil.getExecutionEntityManager();
-        executionEntityManager.deleteChildExecutions(multiInstanceRootExecution, DELETE_REASON_END, true);
-        executionEntityManager.deleteRelatedDataForExecution(multiInstanceRootExecution, null);
+        Collection<String> executionIdsNotToSendCancelledEventsFor = execution.isMultiInstanceRoot() ? null : Collections.singletonList(execution.getId());
+        executionEntityManager.deleteChildExecutions(multiInstanceRootExecution, null, executionIdsNotToSendCancelledEventsFor, DELETE_REASON_END, true, flowElement);
+        executionEntityManager.deleteRelatedDataForExecution(multiInstanceRootExecution, DELETE_REASON_END);
         executionEntityManager.delete(multiInstanceRootExecution);
 
         ExecutionEntity newExecution = executionEntityManager.createChildExecution(parentExecution);
@@ -302,7 +305,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
     }
 
     @SuppressWarnings("rawtypes")
-    protected void executeOriginalBehavior(DelegateExecution execution, int loopCounter) {
+    protected void executeOriginalBehavior(DelegateExecution execution, ExecutionEntity multiInstanceRootExecution, int loopCounter) {
         if (usesCollection() && collectionElementVariable != null) {
             Collection collection = (Collection) resolveAndValidateCollection(execution);
 
@@ -317,7 +320,7 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
         }
 
         execution.setCurrentFlowElement(activity);
-        CommandContextUtil.getAgenda().planContinueMultiInstanceOperation((ExecutionEntity) execution, loopCounter);
+        CommandContextUtil.getAgenda().planContinueMultiInstanceOperation((ExecutionEntity) execution, multiInstanceRootExecution, loopCounter);
     }
 
     @SuppressWarnings("rawtypes")
@@ -329,14 +332,19 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
             if (obj instanceof Collection) {
                 return (Collection) obj;
                 
+            } else if (obj instanceof Iterable) {
+                return iterableToCollection((Iterable) obj);
+                
             } else if (obj instanceof String) {
                 Object collectionVariable = execution.getVariable((String) obj);
                 if (collectionVariable instanceof Collection) {
                     return (Collection) collectionVariable;
+                } else if (collectionVariable instanceof Iterable) {
+                    return iterableToCollection((Iterable) collectionVariable);
                 } else if (collectionVariable == null) {
-                	throw new FlowableIllegalArgumentException("Variable " + collectionVariable + " is not found");
+                    throw new FlowableIllegalArgumentException("Variable '" + obj + "' is not found");
                 } else {
-                    throw new FlowableIllegalArgumentException("Variable " + collectionVariable + "' is not a Collection");
+                    throw new FlowableIllegalArgumentException("Variable '" + obj + "':" + collectionVariable + " is not a Collection");
                 }
                 
             } else {
@@ -344,6 +352,13 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
                 
             }
         }
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    protected Collection iterableToCollection(Iterable iterable) {
+        List result = new ArrayList();
+        iterable.forEach(element -> result.add(element));
+        return result;
     }
 
     protected Object resolveCollection(DelegateExecution execution) {
@@ -387,7 +402,27 @@ public abstract class MultiInstanceActivityBehavior extends FlowNodeActivityBeha
     }
 
     protected Integer getLocalLoopVariable(DelegateExecution execution, String variableName) {
-        return (Integer) execution.getVariableLocal(variableName);
+        Map<String, Object> localVariables = execution.getVariablesLocal();
+        if (localVariables.containsKey(variableName)) {
+            return (Integer) execution.getVariableLocal(variableName);
+            
+        } else if (!execution.isMultiInstanceRoot()) {
+            DelegateExecution parentExecution = execution.getParent();
+            localVariables = parentExecution.getVariablesLocal();
+            if (localVariables.containsKey(variableName)) {
+                return (Integer) parentExecution.getVariableLocal(variableName);
+                
+            } else if (!parentExecution.isMultiInstanceRoot()) {
+                DelegateExecution superExecution = parentExecution.getParent();
+                return (Integer) superExecution.getVariableLocal(variableName);
+                
+            } else {
+                return null;
+            }
+            
+        } else {
+            return null;
+        }
     }
 
     /**

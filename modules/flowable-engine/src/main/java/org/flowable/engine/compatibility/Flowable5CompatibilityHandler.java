@@ -22,7 +22,7 @@ import org.flowable.bpmn.model.BpmnModel;
 import org.flowable.bpmn.model.MapExceptionEntry;
 import org.flowable.engine.ProcessEngineConfiguration;
 import org.flowable.engine.common.api.delegate.event.FlowableEvent;
-import org.flowable.engine.common.runtime.Clock;
+import org.flowable.engine.common.impl.runtime.Clock;
 import org.flowable.engine.delegate.BpmnError;
 import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.form.StartFormData;
@@ -82,6 +82,10 @@ public interface Flowable5CompatibilityHandler {
             String businessKey, String tenantId, String processInstanceName);
 
     ProcessInstance startProcessInstanceByMessage(String messageName, Map<String, Object> variables, Map<String, Object> transientVariables, String businessKey, String tenantId);
+    
+    ProcessInstance getProcessInstance(String processInstanceId);
+    
+    void setProcessInstanceName(String processInstanceId, String processInstanceName);
 
     Object getExecutionVariable(String executionId, String variableName, boolean isLocal);
 

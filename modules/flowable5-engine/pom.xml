@@ -10,7 +10,7 @@
 		<groupId>org.flowable</groupId>
 		<artifactId>flowable-root</artifactId>
 		<relativePath>../..</relativePath>
-		<version>6.2.1</version>
+		<version>6.3.0</version>
 	</parent>
 
 	<dependencies>
@@ -88,11 +88,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.mockito</groupId>
-			<artifactId>mockito-core</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.openjpa</groupId>
 			<artifactId>openjpa</artifactId>
 			<scope>test</scope>
@@ -146,8 +141,8 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.googlecode.catch-exception</groupId>
-			<artifactId>catch-exception</artifactId>
+			<groupId>org.assertj</groupId>
+			<artifactId>assertj-core</artifactId>
 			<scope>test</scope>
 		</dependency>
 
@@ -179,6 +174,7 @@
 			org.activiti.camel.impl;resolution:=optional,
 			org.springframework*;resolution:=optional,
 			org.drools*;resolution:=optional,
+			org.kie*;resolution:=optional,
 			com.fasterxml*;resolution:=optional,
 			javax.transaction;resolution:=optional,
 			javax.enterprise.concurrent;resolution:=optional,

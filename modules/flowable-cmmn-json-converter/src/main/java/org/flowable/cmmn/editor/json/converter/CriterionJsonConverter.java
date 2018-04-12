@@ -69,19 +69,24 @@ public class CriterionJsonConverter extends BaseCmmnJsonConverter {
 
         GraphicInfo parentGraphicInfo = null;
         Stage planModel = cmmnModel.getPrimaryCase().getPlanModel();
-        if (criterion.getAttachedToRefId().equals(planModel.getId())) {
-            parentGraphicInfo = cmmnModel.getGraphicInfo(planModel.getId());
-            
-        } else {
-            PlanItem parentPlanItem = cmmnModel.findPlanItem(criterion.getAttachedToRefId());
-            parentGraphicInfo = cmmnModel.getGraphicInfo(parentPlanItem.getId());
-        }
+        if (criterion.getAttachedToRefId() != null) {
+            if (criterion.getAttachedToRefId().equals(planModel.getId())) {
+                parentGraphicInfo = cmmnModel.getGraphicInfo(planModel.getId());
+                
+            } else {
+                PlanItem parentPlanItem = cmmnModel.findPlanItem(criterion.getAttachedToRefId());
+                parentGraphicInfo = cmmnModel.getGraphicInfo(parentPlanItem.getId());
+            }
         
-        dockNode.put(EDITOR_BOUNDS_X, graphicInfo.getX() - parentGraphicInfo.getX());
-        dockNode.put(EDITOR_BOUNDS_Y, graphicInfo.getY() - parentGraphicInfo.getY());
-        dockersArrayNode.add(dockNode);
-        elementNode.set("dockers", dockersArrayNode);
-        elementNode.set("outgoing", getOutgoingArrayNodes(criterion.getId(), cmmnModel));
+            dockNode.put(EDITOR_BOUNDS_X, graphicInfo.getX() - parentGraphicInfo.getX());
+            dockNode.put(EDITOR_BOUNDS_Y, graphicInfo.getY() - parentGraphicInfo.getY());
+            dockersArrayNode.add(dockNode);
+            elementNode.set("dockers", dockersArrayNode);
+            elementNode.set("outgoing", getOutgoingArrayNodes(criterion.getId(), cmmnModel));
+        } else {
+            elementNode.putArray("dockers");
+            elementNode.putArray("outgoing");
+        }
 
         // set properties
         putProperty(propertiesNode, "name", criterion.getSentry().getName());
@@ -144,10 +149,10 @@ public class CriterionJsonConverter extends BaseCmmnJsonConverter {
         // The onparts will be added later, in the postprocessing.
         Sentry sentry = new Sentry();
         sentry.setId("sentry" + cmmnModelIdHelper.nextSentryId());
-        sentry.setName(getPropertyValueAsString(PROPERTY_NAME, elementNode));
-        sentry.setDocumentation(getPropertyValueAsString(PROPERTY_DOCUMENTATION, elementNode));
+        sentry.setName(CmmnJsonConverterUtil.getPropertyValueAsString(PROPERTY_NAME, elementNode));
+        sentry.setDocumentation(CmmnJsonConverterUtil.getPropertyValueAsString(PROPERTY_DOCUMENTATION, elementNode));
 
-        String ifPartCondition = getPropertyValueAsString(PROPERTY_IF_PART_CONDITION, elementNode);
+        String ifPartCondition = CmmnJsonConverterUtil.getPropertyValueAsString(PROPERTY_IF_PART_CONDITION, elementNode);
         if (StringUtils.isNotBlank(ifPartCondition)) {
             SentryIfPart sentryIfPart = new SentryIfPart();
             sentryIfPart.setCondition(ifPartCondition);

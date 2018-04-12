@@ -33,6 +33,7 @@ import org.springframework.web.multipart.MultipartFile;
  * @author Frederik Heremans
  */
 @RestController
+@RequestMapping("/app")
 public class RelatedContentResource extends AbstractRelatedContentResource {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RelatedContentResource.class);
@@ -47,6 +48,11 @@ public class RelatedContentResource extends AbstractRelatedContentResource {
     @RequestMapping(value = "/rest/process-instances/{processInstanceId}/content", method = RequestMethod.GET)
     public ResultListDataRepresentation getContentItemsForProcessInstance(@PathVariable("processInstanceId") String processInstanceId) {
         return super.getContentItemsForProcessInstance(processInstanceId);
+    }
+
+    @RequestMapping(value = "/rest/case-instances/{caseInstanceId}/content", method = RequestMethod.GET)
+    public ResultListDataRepresentation getContentItemsForCase(@PathVariable("caseInstanceId") String caseInstanceId) {
+        return super.getContentItemsForCase(caseInstanceId);
     }
 
     @RequestMapping(value = "/rest/tasks/{taskId}/raw-content", method = RequestMethod.POST)
@@ -92,6 +98,29 @@ public class RelatedContentResource extends AbstractRelatedContentResource {
     @RequestMapping(value = "/rest/process-instances/{processInstanceId}/raw-content/text", method = RequestMethod.POST)
     public String createContentItemOnProcessInstanceText(@PathVariable("processInstanceId") String processInstanceId, @RequestParam("file") MultipartFile file) {
         ContentItemRepresentation contentItem = super.createContentItemOnProcessInstance(processInstanceId, file);
+
+        String contentItemJson = null;
+        try {
+            contentItemJson = objectMapper.writeValueAsString(contentItem);
+        } catch (Exception e) {
+            LOGGER.error("Error while processing ContentItem representation json", e);
+            throw new InternalServerErrorException("ContentItem on process instance could not be saved");
+        }
+
+        return contentItemJson;
+    }
+
+    @RequestMapping(value = "/rest/case-instances/{caseId}/raw-content", method = RequestMethod.POST)
+    public ContentItemRepresentation createContentItemOnCase(@PathVariable("caseId") String caseId, @RequestParam("file") MultipartFile file) {
+        return super.createContentItemOnCase(caseId, file);
+    }
+
+    /*
+     * specific endpoint for IE9 flash upload component
+     */
+    @RequestMapping(value = "/rest/case-instances/{caseId}/raw-content/text", method = RequestMethod.POST)
+    public String createContentItemOnCaseText(@PathVariable("caseId") String caseId, @RequestParam("file") MultipartFile file) {
+        ContentItemRepresentation contentItem = super.createContentItemOnCase(caseId, file);
 
         String contentItemJson = null;
         try {

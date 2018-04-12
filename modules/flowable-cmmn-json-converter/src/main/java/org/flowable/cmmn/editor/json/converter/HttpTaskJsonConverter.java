@@ -12,8 +12,8 @@
  */
 package org.flowable.cmmn.editor.json.converter;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.Map;
+
 import org.apache.commons.lang3.StringUtils;
 import org.flowable.cmmn.editor.json.converter.CmmnJsonConverter.CmmnModelIdHelper;
 import org.flowable.cmmn.model.BaseElement;
@@ -21,7 +21,8 @@ import org.flowable.cmmn.model.CaseElement;
 import org.flowable.cmmn.model.CmmnModel;
 import org.flowable.cmmn.model.HttpServiceTask;
 
-import java.util.Map;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 /**
  * @author Tijs Rademakers
@@ -49,11 +50,11 @@ public class HttpTaskJsonConverter extends BaseCmmnJsonConverter {
 
         HttpServiceTask task = new HttpServiceTask();
 
-        if (StringUtils.isNotEmpty(getPropertyValueAsString(PROPERTY_SERVICETASK_CLASS, elementNode))) {
-            task.setImplementation(getPropertyValueAsString(PROPERTY_SERVICETASK_CLASS, elementNode));
+        if (StringUtils.isNotEmpty(CmmnJsonConverterUtil.getPropertyValueAsString(PROPERTY_SERVICETASK_CLASS, elementNode))) {
+            task.setImplementation(CmmnJsonConverterUtil.getPropertyValueAsString(PROPERTY_SERVICETASK_CLASS, elementNode));
         }
 
-        addField("requestMethod", PROPERTY_HTTPTASK_REQ_METHOD, elementNode, task);
+        addField("requestMethod", PROPERTY_HTTPTASK_REQ_METHOD, "GET", elementNode, task);
         addField("requestUrl", PROPERTY_HTTPTASK_REQ_URL, elementNode, task);
         addField("requestHeaders", PROPERTY_HTTPTASK_REQ_HEADERS, elementNode, task);
         addField("requestBody", PROPERTY_HTTPTASK_REQ_BODY, elementNode, task);
@@ -66,6 +67,8 @@ public class HttpTaskJsonConverter extends BaseCmmnJsonConverter {
         addField("saveRequestVariables", PROPERTY_HTTPTASK_SAVE_REQUEST_VARIABLES, elementNode, task);
         addField("saveResponseParameters", PROPERTY_HTTPTASK_SAVE_RESPONSE_PARAMETERS, elementNode, task);
         addField("resultVariablePrefix", PROPERTY_HTTPTASK_RESULT_VARIABLE_PREFIX, elementNode, task);
+        addField("saveResponseParametersTransient", PROPERTY_HTTPTASK_SAVE_RESPONSE_TRANSIENT, elementNode, task);
+        addField("saveResponseVariableAsJson", PROPERTY_HTTPTASK_SAVE_RESPONSE_AS_JSON, elementNode, task);
 
         return task;
     }

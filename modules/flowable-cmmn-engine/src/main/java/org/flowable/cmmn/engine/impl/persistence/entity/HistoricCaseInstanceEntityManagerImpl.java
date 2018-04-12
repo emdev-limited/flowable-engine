@@ -55,13 +55,15 @@ public class HistoricCaseInstanceEntityManagerImpl extends AbstractCmmnEntityMan
     }
 
     @Override
+    @SuppressWarnings("unchecked")
+    public List<HistoricCaseInstance> findWithVariablesByQueryCriteria(HistoricCaseInstanceQuery query) {
+        return historicCaseInstanceDataManager.findWithVariablesByQueryCriteria((HistoricCaseInstanceQueryImpl) query);
+    }
+
+
+    @Override
    public long countByCriteria(HistoricCaseInstanceQuery query) {
         return historicCaseInstanceDataManager.countByCriteria((HistoricCaseInstanceQueryImpl) query);
     }
     
-    @Override
-    public void deleteByCaseDefinitionId(String caseDefinitionId) {
-        historicCaseInstanceDataManager.deleteByCaseDefinitionId(caseDefinitionId);
-    }
-
 }

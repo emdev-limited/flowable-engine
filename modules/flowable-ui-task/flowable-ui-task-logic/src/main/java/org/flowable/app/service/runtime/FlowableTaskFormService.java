@@ -12,6 +12,8 @@
  */
 package org.flowable.app.service.runtime;
 
+import java.util.Map;
+
 import org.flowable.app.model.runtime.CompleteFormRepresentation;
 import org.flowable.app.model.runtime.SaveFormRepresentation;
 import org.flowable.app.security.SecurityUtils;
@@ -21,9 +23,9 @@ import org.flowable.cmmn.api.CmmnTaskService;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.TaskService;
+import org.flowable.form.api.FormInfo;
 import org.flowable.form.api.FormRepositoryService;
 import org.flowable.form.api.FormService;
-import org.flowable.form.model.FormModel;
 import org.flowable.idm.api.User;
 import org.flowable.task.api.Task;
 import org.flowable.task.api.history.HistoricTaskInstance;
@@ -68,7 +70,7 @@ public class FlowableTaskFormService {
     @Autowired
     protected ObjectMapper objectMapper;
 
-    public FormModel getTaskForm(String taskId) {
+    public FormInfo getTaskForm(String taskId) {
         HistoricTaskInstance task = permissionService.validateReadPermissionOnTask(SecurityUtils.getCurrentUserObject(), taskId);
         if (task.getProcessInstanceId() != null) {
             return taskService.getTaskFormModel(task.getId());
@@ -87,13 +89,16 @@ public class FlowableTaskFormService {
         }
 
         checkCurrentUserCanModifyTask(task);
-
+            
+        FormInfo formInfo = formRepositoryService.getFormModelById(saveFormRepresentation.getFormId());
+        Map<String, Object> formVariables = formService.getVariablesFromFormSubmission(formInfo, saveFormRepresentation.getValues(), null);
+        
         if (task.getProcessInstanceId() != null) {
-            formService.saveFormInstanceByFormModelId(saveFormRepresentation.getValues(), saveFormRepresentation.getFormId(), taskId, 
+            formService.saveFormInstanceByFormDefinitionId(formVariables, saveFormRepresentation.getFormId(), taskId, 
                             task.getProcessInstanceId(), task.getProcessDefinitionId());
             
         } else {
-            formService.saveFormInstanceWithScopeId(saveFormRepresentation.getValues(), saveFormRepresentation.getFormId(), taskId, 
+            formService.saveFormInstanceWithScopeId(formVariables, saveFormRepresentation.getFormId(), taskId, 
                             task.getScopeId(), task.getScopeType(), task.getScopeDefinitionId());
         }
 

@@ -43,12 +43,16 @@ public class HitPolicyOutputOrder extends AbstractHitPolicy implements ComposeDe
             List<Object> outputValues = entry.getValue();
             if (outputValues != null && !outputValues.isEmpty()) {
                 outputValuesPresent = true;
+                break;
             }
         }
         
         if (!outputValuesPresent) {
+            String hitPolicyViolatedMessage = String.format("HitPolicy: %s violated; no output values present", getHitPolicyName());
             if (CommandContextUtil.getDmnEngineConfiguration().isStrictMode()) {
-                throw new FlowableException(String.format("HitPolicy: %s; no output values present", getHitPolicyName()));
+                throw new FlowableException(hitPolicyViolatedMessage);
+            } else {
+                executionContext.getAuditContainer().setValidationMessage(hitPolicyViolatedMessage);
             }
         }
 
@@ -57,7 +61,6 @@ public class HitPolicyOutputOrder extends AbstractHitPolicy implements ComposeDe
 
             @Override
             public int compare(Map<String, Object> o1, Map<String, Object> o2) {
-                
                 CompareToBuilder compareToBuilder = new CompareToBuilder();
                 for (Map.Entry<String, List<Object>> entry : executionContext.getOutputValues().entrySet()) {
                     List<Object> outputValues = entry.getValue();
@@ -67,7 +70,6 @@ public class HitPolicyOutputOrder extends AbstractHitPolicy implements ComposeDe
                         compareToBuilder.toComparison();
                     }
                 }
-                
                 return compareToBuilder.toComparison();
             }
         });

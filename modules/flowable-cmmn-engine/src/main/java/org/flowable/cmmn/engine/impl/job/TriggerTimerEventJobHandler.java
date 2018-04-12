@@ -24,7 +24,7 @@ import org.flowable.variable.api.delegate.VariableScope;
  */
 public class TriggerTimerEventJobHandler implements JobHandler {
 
-    public static final String TYPE = "trigger-timer";
+    public static final String TYPE = "cmmn-trigger-timer";
 
     @Override
     public String getType() {

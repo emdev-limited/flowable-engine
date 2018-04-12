@@ -1,9 +1,9 @@
 /* Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- * 
+ *
  *      http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -60,6 +60,7 @@ public interface BpmnXMLConstants {
 
     public static final String ELEMENT_PROCESS = "process";
     public static final String ATTRIBUTE_PROCESS_EXECUTABLE = "isExecutable";
+    public static final String ATTRIBUTE_PROCESS_EAGER_EXECUTION_FETCHING = "isEagerExecutionFetching";
     public static final String ELEMENT_POTENTIAL_STARTER = "potentialStarter";
     public static final String ATTRIBUTE_PROCESS_CANDIDATE_USERS = "candidateStarterUsers";
     public static final String ATTRIBUTE_PROCESS_CANDIDATE_GROUPS = "candidateStarterGroups";
@@ -97,7 +98,7 @@ public interface BpmnXMLConstants {
 
     public static final String ELEMENT_HTTP_REQUEST_HANDLER = "httpRequestHandler";
     public static final String ELEMENT_HTTP_RESPONSE_HANDLER = "httpResponseHandler";
-    
+
     public static final String ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_SIGNAL = "signal";
     public static final String ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_GLOBAL_SIGNAL = "globalSignal";
     public static final String ATTRIBUTE_LISTENER_THROW_EVENT_TYPE_MESSAGE = "message";
@@ -109,6 +110,7 @@ public interface BpmnXMLConstants {
     public static final String ATTRIBUTE_ACTIVITY_ASYNCHRONOUS = "async";
     public static final String ATTRIBUTE_ACTIVITY_EXCLUSIVE = "exclusive";
     public static final String ATTRIBUTE_ACTIVITY_ISFORCOMPENSATION = "isForCompensation";
+    public static final String ATTRIBUTE_ACTIVITY_TRIGGERABLE = "triggerable";
 
     public static final String ELEMENT_IMPORT = "import";
     public static final String ATTRIBUTE_IMPORT_TYPE = "importType";
@@ -191,6 +193,7 @@ public interface BpmnXMLConstants {
     public static final String ATTRIBUTE_TASK_SERVICE_RESULTVARIABLE = "resultVariableName";
     public static final String ATTRIBUTE_TASK_SERVICE_EXTENSIONID = "extensionId";
     public static final String ATTRIBUTE_TASK_SERVICE_SKIP_EXPRESSION = "skipExpression";
+    public static final String ATTRIBUTE_TASK_SERVICE_USE_LOCAL_SCOPE_FOR_RESULT_VARIABLE = "useLocalScopeForResultVariable";
 
     public static final String ATTRIBUTE_TASK_USER_ASSIGNEE = "assignee";
     public static final String ATTRIBUTE_TASK_USER_OWNER = "owner";
@@ -212,6 +215,7 @@ public interface BpmnXMLConstants {
     public static final String ATTRIBUTE_CALL_ACTIVITY_BUSINESS_KEY = "businessKey";
     public static final String ATTRIBUTE_CALL_ACTIVITY_INHERIT_BUSINESS_KEY = "inheritBusinessKey";
     public static final String ATTRIBUTE_CALL_ACTIVITY_INHERITVARIABLES = "inheritVariables";
+    public static final String ATTRIBUTE_CALL_ACTIVITY_SAME_DEPLOYMENT = "sameDeployment";
     public static final String ATTRIBUTE_CALL_ACTIVITY_USE_LOCALSCOPE_FOR_OUTPARAMETERS = "useLocalScopeForOutParameters";
     public static final String ELEMENT_CALL_ACTIVITY_IN_PARAMETERS = "in";
     public static final String ELEMENT_CALL_ACTIVITY_OUT_PARAMETERS = "out";

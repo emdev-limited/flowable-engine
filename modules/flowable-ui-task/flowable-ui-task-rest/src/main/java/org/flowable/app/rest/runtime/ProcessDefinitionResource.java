@@ -12,23 +12,27 @@
  */
 package org.flowable.app.rest.runtime;
 
-import javax.servlet.http.HttpServletRequest;
-
+import org.flowable.app.model.runtime.FormModelRepresentation;
 import org.flowable.app.service.runtime.FlowableProcessDefinitionService;
-import org.flowable.form.model.FormModel;
+import org.flowable.form.api.FormInfo;
+import org.flowable.form.model.SimpleFormModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
+@RequestMapping("/app")
 public class ProcessDefinitionResource {
 
     @Autowired
     protected FlowableProcessDefinitionService processDefinitionService;
 
     @RequestMapping(value = "/rest/process-definitions/{processDefinitionId}/start-form", method = RequestMethod.GET, produces = "application/json")
-    public FormModel getProcessDefinitionStartForm(HttpServletRequest request) {
-        return processDefinitionService.getProcessDefinitionStartForm(request);
+    public FormModelRepresentation getProcessDefinitionStartForm(@PathVariable String processDefinitionId) {
+        FormInfo formInfo = processDefinitionService.getProcessDefinitionStartForm(processDefinitionId);
+        SimpleFormModel formModel = (SimpleFormModel) formInfo.getFormModel();
+        return new FormModelRepresentation(formInfo, formModel);
     }
 }
