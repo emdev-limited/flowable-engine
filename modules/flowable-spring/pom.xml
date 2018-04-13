@@ -15,8 +15,12 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <flowable.artifact>
-            org.flowable.spring
+            org.flowable.spring.impl
         </flowable.artifact>
+        <flowable.osgi.export.additional>
+        		org.flowable.spring,
+        		org.flowable.spring.configurator
+        </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
           org.springframework.test.context*;resolution:=optional,
         </flowable.osgi.import.additional>

@@ -224,10 +224,26 @@
 
     <properties>
         <flowable.artifact>
-            org.flowable.engine
+            org.flowable.engine.impl
         </flowable.artifact>
         <flowable.osgi.export.additional>
-            org.flowable.db*
+            org.flowable.db*,
+            org.flowable.engine.logging,
+            org.flowable.engine.parse,
+            org.flowable.engine.repository,
+            org.flowable.engine.runtime,
+            org.flowable.engine.task,
+            org.flowable.engine.test*,
+            org.flowable.engine,
+            org.flowable.engine.app,
+            org.flowable.engine.cfg,
+            org.flowable.engine.compatibility,
+            org.flowable.engine.debug,
+            org.flowable.engine.delegate*,
+            org.flowable.engine.dynamic,
+            org.flowable.engine.event,
+            org.flowable.engine.form,
+            org.flowable.engine.history
         </flowable.osgi.export.additional>
         <flowable.osgi.import.additional>
             junit*;resolution:=optional,
