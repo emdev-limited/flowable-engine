@@ -131,13 +131,19 @@ public class CallActivityBehavior extends AbstractBpmnActivityBehavior implement
         subProcessInstance.setVariables(processDataObjects(subProcess.getDataObjects()));
 
         Map<String, Object> variables = new HashMap<>();
-
-        if (callActivity.isInheritVariables()) {
-            Map<String, Object> executionVariables = execution.getVariables();
-            for (Map.Entry<String, Object> entry : executionVariables.entrySet()) {
+        //EmDev - always copy vars
+        Map<String, Object> executionVariables = execution.getVariables();
+        if (executionVariables != null && !executionVariables.isEmpty()) {
+        		for (Map.Entry<String, Object> entry : executionVariables.entrySet()) {
                 variables.put(entry.getKey(), entry.getValue());
             }
         }
+//        if (callActivity.isInheritVariables()) {
+//            Map<String, Object> executionVariables = execution.getVariables();
+//            for (Map.Entry<String, Object> entry : executionVariables.entrySet()) {
+//                variables.put(entry.getKey(), entry.getValue());
+//            }
+//        }
 
         // copy process variables
         for (IOParameter ioParameter : callActivity.getInParameters()) {
