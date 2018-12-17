@@ -529,7 +529,7 @@
   	<if test="firstResult != null and firstResult &gt;= 0">${limitBefore}</if>
     select distinct RES.* <if test="firstResult != null and firstResult &gt;= 0">${limitBetween}</if>, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
     <include refid="selectExecutionsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
 
@@ -543,7 +543,7 @@
   	<if test="firstResult != null and firstResult &gt;= 0">${limitBefore}</if>
     select distinct RES.* <if test="firstResult != null and firstResult &gt;= 0">${limitBetween}</if>, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
     <include refid="selectExecutionsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
 
@@ -561,7 +561,7 @@
   <select id="selectProcessInstanceWithVariablesByQueryCriteria" parameterType="org.flowable.engine.impl.ProcessInstanceQueryImpl" resultMap="processInstanceAndVariablesResultMap">
     <include refid="selectProcessInstanceWithVariablesByQueryCriteriaColumns"/>
     <include refid="selectProcessInstanceWithVariablesByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
 

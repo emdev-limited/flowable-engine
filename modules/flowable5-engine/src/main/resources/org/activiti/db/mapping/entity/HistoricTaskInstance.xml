@@ -280,7 +280,7 @@
   	${limitBefore}
     select distinct RES.* ${limitBetween}
     <include refid="selectHistoricTaskInstancesByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -303,7 +303,7 @@
     VAR.TEXT_ as VAR_TEXT_, VAR.TEXT2_ as VAR_TEXT2_, VAR.LAST_UPDATED_TIME_ as VAR_LAST_UPDATED_TIME_, VAR.LONG_ as VAR_LONG_
     ${limitBetween}
     <include refid="selectHistoricTaskInstancesWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -334,7 +334,7 @@
     VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_, VAR.DOUBLE_ as TEMPVAR_DOUBLE_, 
     VAR.TEXT_ as TEMPVAR_TEXT_, VAR.TEXT2_ as TEMPVAR_TEXT2_, VAR.LAST_UPDATED_TIME_ as TEMPVAR_LAST_UPDATED_TIME_, VAR.LONG_ as TEMPVAR_LONG_
     <include refid="selectHistoricTaskInstancesWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   

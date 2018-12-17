@@ -36,7 +36,7 @@
     ${limitBefore}
     select distinct <include refid="selectCustomTaskColumns"/> ${limitBetween}
     <include refid="selectCustomTaskByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   

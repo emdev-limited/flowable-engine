@@ -69,7 +69,7 @@
   	${limitBefore}
     select distinct RES.* ${limitBetween}
     <include refid="selectDeploymentsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
 
@@ -130,7 +130,7 @@
   	${limitBefore}
     select distinct RES.* ${limitBetween}
     <include refid="selectDeploymentsByQueryCriteriaSql"/>
-   	${orderBy}
+   	<if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
