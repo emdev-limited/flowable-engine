@@ -229,7 +229,7 @@
     ${limitBefore}
     select distinct RES.* ${limitBetween}, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_
     <include refid="selectHistoricProcessInstancesByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -262,7 +262,7 @@
     VAR.LONG_ as VAR_LONG_
     ${limitBetween}
     <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -331,7 +331,7 @@
     VAR.LAST_UPDATED_TIME_ as TEMPVAR_LAST_UPDATED_TIME_, 
     VAR.LONG_ as TEMPVAR_LONG_
     <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
