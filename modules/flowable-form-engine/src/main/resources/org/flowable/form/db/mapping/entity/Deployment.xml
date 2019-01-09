@@ -76,7 +76,7 @@
   	<if test="firstResult != null and firstResult &gt;= 0">${limitBefore}</if>
     select distinct RES.* <if test="firstResult != null and firstResult &gt;= 0">${limitBetween}</if>
     <include refid="selectFormDeploymentsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
 
@@ -139,7 +139,7 @@
   	<if test="firstResult != null and firstResult &gt;= 0">${limitBefore}</if>
     select distinct RES.* <if test="firstResult != null and firstResult &gt;= 0">${limitBetween}</if>
     <include refid="selectFormDeploymentsByQueryCriteriaSql"/>
-   	${orderBy}
+   	<if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
   

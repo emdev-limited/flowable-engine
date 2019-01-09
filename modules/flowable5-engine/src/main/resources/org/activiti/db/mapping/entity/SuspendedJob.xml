@@ -171,7 +171,7 @@
         ${limitBefore}
         select RES.* ${limitBetween}
         <include refid="selectSuspendedJobByQueryCriteriaSql"/>
-        ${orderBy}
+        <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
         ${limitAfter}
     </select>
 

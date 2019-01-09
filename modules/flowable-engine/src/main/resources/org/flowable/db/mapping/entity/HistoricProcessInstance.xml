@@ -289,7 +289,7 @@
   	<if test="firstResult != null and firstResult &gt;= 0">${limitBefore}</if>
     select distinct RES.* <if test="firstResult != null and firstResult &gt;= 0">${limitBetween}</if>, DEF.KEY_ as PROC_DEF_KEY_, DEF.NAME_ as PROC_DEF_NAME_, DEF.VERSION_ as PROC_DEF_VERSION_, DEF.DEPLOYMENT_ID_ as DEPLOYMENT_ID_
     <include refid="selectHistoricProcessInstancesByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
   
@@ -305,9 +305,9 @@
   </sql>
   
   <select id="selectHistoricProcessInstancesWithVariablesByQueryCriteria" parameterType="org.flowable.engine.impl.HistoricProcessInstanceQueryImpl" resultMap="historicProcessInstanceAndVariablesResultMap">
-    <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaColumns"/> 
-    <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaColumns"/>
+    <include refid="selectHistoricProcessInstancesWithVariablesByQueryCriteriaSql"/>
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     <if test="firstResult != null and firstResult &gt;= 0">${limitAfter}</if>
   </select>
   

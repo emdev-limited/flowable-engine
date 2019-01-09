@@ -296,7 +296,7 @@
     ${limitBefore}
     select distinct RES.* ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId
     <include refid="selectExecutionsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -310,7 +310,7 @@
     ${limitBefore}
     select distinct RES.* ${limitBetween}, P.KEY_ as ProcessDefinitionKey, P.ID_ as ProcessDefinitionId, P.NAME_ as ProcessDefinitionName, P.VERSION_ as ProcessDefinitionVersion, P.DEPLOYMENT_ID_ as DeploymentId
     <include refid="selectExecutionsByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -334,7 +334,7 @@
     VAR.TEXT_ as VAR_TEXT_, VAR.TEXT2_ as VAR_TEXT2_, VAR.LONG_ as VAR_LONG_
     ${limitBetween}
     <include refid="selectProcessInstanceWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
@@ -366,7 +366,7 @@
     VAR.BYTEARRAY_ID_ as TEMPVAR_BYTEARRAY_ID_, VAR.DOUBLE_ as TEMPVAR_DOUBLE_, 
     VAR.TEXT_ as TEMPVAR_TEXT_, VAR.TEXT2_ as TEMPVAR_TEXT2_, VAR.LONG_ as TEMPVAR_LONG_
     <include refid="selectProcessInstanceWithVariablesByQueryCriteriaSql"/> 
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   

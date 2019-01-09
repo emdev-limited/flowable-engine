@@ -172,7 +172,7 @@
     ${limitBefore}
     select RES.* ${limitBetween}
     <include refid="selectHistoricActivityInstancesByQueryCriteriaSql"/>
-    ${orderBy}
+    <if test="orderBy != null">${orderBy}<if test="_databaseId == 'mssql'"> offset 0 rows</if></if>
     ${limitAfter}
   </select>
   
