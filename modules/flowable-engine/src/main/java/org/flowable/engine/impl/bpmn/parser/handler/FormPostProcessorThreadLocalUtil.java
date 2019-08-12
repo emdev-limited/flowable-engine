@@ -69,7 +69,13 @@ public class FormPostProcessorThreadLocalUtil {
 	public static void putToThreadLocal(FlowElement sourceActivity, FlowElement destinationActivity, String name) {
 		if (destinationActivity == null) return;
 		//check if it already exists
-		FormPostProcessorWrapper existing = getFromThreadLocalByDestination(destinationActivity);
+		FormPostProcessorWrapper existing;
+		if (sourceActivity == null) {
+			existing = getFromThreadLocalByDestination(destinationActivity);
+		}else {
+			existing = getFromThreadLocalBySourceAndDest(sourceActivity, destinationActivity);
+		}
+
 		if (existing != null) {
 			if (!StringUtils.isEmpty(name)) {
 				//put sequence flow info
@@ -79,17 +85,32 @@ public class FormPostProcessorThreadLocalUtil {
 				existing.setSourceActivity(sourceActivity);
 			}
 		} else {
-			FormPostProcessorWrapper obj = new FormPostProcessorWrapper(sourceActivity, destinationActivity);
-			if (!StringUtils.isEmpty(name)) {
-				//put sequence flow info
-				obj.getOutputTransitionNames().add(name);
-			}
-			if (LOCALS.get() == null) {
-				LOCALS.set(new ArrayList<FormPostProcessorWrapper>());
-			}
-			LOCALS.get().add(obj);
+			addNewFormPostProcessorWrapperToLOCALS(sourceActivity, destinationActivity, name);
 		}
 	}
+
+	private static void addNewFormPostProcessorWrapperToLOCALS(FlowElement sourceActivity, FlowElement destinationActivity, String name) {
+		FormPostProcessorWrapper obj = new FormPostProcessorWrapper(sourceActivity, destinationActivity);
+		if (!StringUtils.isEmpty(name)) {
+			//put sequence flow info
+			obj.getOutputTransitionNames().add(name);
+		}
+		if (LOCALS.get() == null) {
+			LOCALS.set(new ArrayList<FormPostProcessorWrapper>());
+		}
+		LOCALS.get().add(obj);
+	}
+
+	public static void putUserTaskToExclusiveGatewayFlowToThreadLocal(
+			FlowElement sourceActivity,
+			FlowElement destinationActivity,
+			String name) {
+		if (destinationActivity == null) return;
+		//check if it already exists
+
+		addNewFormPostProcessorWrapperToLOCALS(sourceActivity, destinationActivity, name);
+	}
+
 	
 	public static void cleanUp() {
 		LOCALS.set(new ArrayList<FormPostProcessorWrapper>());

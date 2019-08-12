@@ -9,6 +9,8 @@ import org.flowable.bpmn.model.UserTask;
 import org.flowable.engine.impl.bpmn.parser.BpmnParse;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 
 	@Override
@@ -33,7 +35,11 @@ public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 		            for (FlowableListener fl : sequenceFlow.getExecutionListeners()) {
 		            	createExecutionListener(bpmnParse, fl);
 		            }
-		            FormPostProcessorThreadLocalUtil.putToThreadLocal(null, sourceActivity, sequenceFlow.getName());
+					boolean hasNoUserTaskSourceActivity = putOutputTransitionsForUserTasksToLocalThread(
+							sequenceFlow, sourceActivity);
+					if (hasNoUserTaskSourceActivity) {
+						FormPostProcessorThreadLocalUtil.putToThreadLocal(null, sourceActivity, sequenceFlow.getName());
+					}
 	    		}
 	    	}	
 	    }
@@ -42,7 +48,7 @@ public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 	    		&& sourceActivity != null && sourceActivity instanceof UserTask) {
 	    	if (StringUtils.isEmpty(sequenceFlow.getConditionExpression())) {
 	    		//put it into thread local for post-processing. Use {@link FormPostProcessorWrapper}
-		    	FormPostProcessorThreadLocalUtil.putToThreadLocal(sourceActivity, destinationActivity, null);
+		    	FormPostProcessorThreadLocalUtil.putUserTaskToExclusiveGatewayFlowToThreadLocal(sourceActivity, destinationActivity, null);
 	    	}
 	    }
 	    //Remove standard Done action name in the Portal
@@ -55,5 +61,23 @@ public class CustomSequenceFlowParseHandler extends SequenceFlowParseHandler {
 	    	}
 	    }
 	    
+	}
+
+	/**
+	 * If incoming flows to Exclusive gateway comes from UserTasks - put to thread local output transitions to each
+	 * user task
+	 */
+	private boolean putOutputTransitionsForUserTasksToLocalThread(SequenceFlow sequenceFlow, FlowElement sourceActivity) {
+		boolean hasNoUserTaskSourceActivity = true;
+		List<SequenceFlow> incomingFlows = ((ExclusiveGateway) sourceActivity).getIncomingFlows();
+		for (SequenceFlow incomingFlow : incomingFlows) {
+			FlowElement sourceFlowElement = incomingFlow.getSourceFlowElement();
+			if (sourceFlowElement != null && sourceFlowElement instanceof UserTask) {
+				FormPostProcessorThreadLocalUtil.putToThreadLocal(sourceFlowElement, sourceActivity,
+						sequenceFlow.getName());
+				hasNoUserTaskSourceActivity = false;
+			}
+		}
+		return hasNoUserTaskSourceActivity;
 	}
 }
