@@ -28,12 +28,16 @@ import org.flowable.engine.common.impl.util.IoUtil;
 import org.flowable.engine.common.impl.util.ReflectUtil;
 import org.flowable.variable.api.types.ValueFields;
 import org.flowable.variable.service.impl.persistence.entity.VariableInstanceEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Tom Baeyens
  * @author Marcus Klimstra (CGI)
  */
 public class SerializableType extends ByteArrayType {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(SerializableType.class);
 
     public static final String TYPE_NAME = "serializable";
 
@@ -114,10 +118,27 @@ public class SerializableType extends ByteArrayType {
 
             return deserializedObject;
         } catch (Exception e) {
-            throw new FlowableException("Couldn't deserialize object in variable '" + valueFields.getName() + "'", e);
+            /*
+            This is a workaround for tasks INPROCESS-265 и INPROCESS-266 to return null then problem with
+            deserialization happened with serviceContext or one of its elements
+             */
+            if (isFromLiferay(valueFields)) {
+                LOGGER.error("Couldn't deserialize object in variable '" + valueFields.getName() + "'", e);
+            } else {
+                throw new FlowableException("Couldn't deserialize object in variable '" + valueFields.getName() + "'", e);
+            }
         } finally {
             IoUtil.closeSilently(bais);
         }
+        return null;
+    }
+
+    /**
+     *Check for deserializing object is one of specific objects from com.liferay.portal.kernel package
+     */
+    private boolean isFromLiferay(ValueFields valueFields) {
+        String name = valueFields.getName();
+        return "modelPermissions".equals(name) || "serviceContext".equals(name) || "portletPreferencesIds".equals(name);
     }
 
     @Override
