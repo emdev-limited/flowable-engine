@@ -22,6 +22,7 @@ import java.io.ObjectStreamClass;
 import java.io.OutputStream;
 import java.io.Serializable;
 
+import org.apache.commons.lang3.StringUtils;
 import org.flowable.engine.common.api.FlowableException;
 import org.flowable.engine.common.impl.context.Context;
 import org.flowable.engine.common.impl.util.IoUtil;
@@ -122,10 +123,12 @@ public class SerializableType extends ByteArrayType {
             This is a workaround for tasks INPROCESS-265 и INPROCESS-266 to return null then problem with
             deserialization happened with serviceContext or one of its elements
              */
+            String message = "Couldn't deserialize %sobject in variable '%s'";
             if (isFromLiferay(valueFields)) {
-                LOGGER.error("Couldn't deserialize object in variable '" + valueFields.getName() + "'", e);
+                LOGGER.error(String.format(message, "Liferay ", valueFields.getName()));
+                LOGGER.debug(String.format(message, "Liferay ", valueFields.getName()), e);
             } else {
-                throw new FlowableException("Couldn't deserialize object in variable '" + valueFields.getName() + "'", e);
+                throw new FlowableException(String.format(message, "", valueFields.getName()), e);
             }
         } finally {
             IoUtil.closeSilently(bais);
@@ -138,7 +141,11 @@ public class SerializableType extends ByteArrayType {
      */
     private boolean isFromLiferay(ValueFields valueFields) {
         String name = valueFields.getName();
-        return "modelPermissions".equals(name) || "serviceContext".equals(name) || "portletPreferencesIds".equals(name);
+        return "modelPermissions".equals(name) ||
+                "serviceContext".equals(name) ||
+                "portletPreferencesIds".equals(name) ||
+                "allVariables".equals(name) ||
+                "formKeys".equals(name);
     }
 
     @Override
