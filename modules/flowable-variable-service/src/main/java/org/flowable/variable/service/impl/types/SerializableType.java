@@ -125,8 +125,11 @@ public class SerializableType extends ByteArrayType {
              */
             String message = "Couldn't deserialize %sobject in variable '%s'";
             if (isFromLiferay(valueFields)) {
-                LOGGER.error(String.format(message, "Liferay ", valueFields.getName()));
-                LOGGER.debug(String.format(message, "Liferay ", valueFields.getName()), e);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug(String.format(message, "Liferay ", valueFields.getName()), e);
+                } else if (LOGGER.isErrorEnabled()) {
+                    LOGGER.error(String.format(message, "Liferay ", valueFields.getName()));
+                }
             } else {
                 throw new FlowableException(String.format(message, "", valueFields.getName()), e);
             }
