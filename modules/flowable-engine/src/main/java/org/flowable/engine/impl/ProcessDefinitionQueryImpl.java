@@ -348,6 +348,16 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
         return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_TENANT_ID);
     }
 
+    @Override
+    public ProcessDefinitionQuery orderByTitle() {
+        return orderByProcessDefinitionName();
+    }
+
+    @Override
+    public ProcessDefinitionQuery orderByModifiedDate() {
+        return  orderByDeploymentId();
+    }
+
     // results ////////////////////////////////////////////
 
     @Override
