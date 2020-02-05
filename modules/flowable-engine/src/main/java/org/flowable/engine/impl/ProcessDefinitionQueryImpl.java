@@ -348,6 +348,25 @@ public class ProcessDefinitionQueryImpl extends AbstractQuery<ProcessDefinitionQ
         return orderBy(ProcessDefinitionQueryProperty.PROCESS_DEFINITION_TENANT_ID);
     }
 
+    /*
+     * This method added to implement sorting, from ControlPanelWorkflow portlet
+     * property name (processDefinitionName) of ProcessDefinitionEntityImpl is similar to title of WorkflowDefinition
+     */
+    @Override
+    public ProcessDefinitionQuery orderByTitle() {
+        return orderByProcessDefinitionName();
+    }
+
+    /*
+     * This method added to implement sorting, from ControlPanelWorkflow portlet
+     * property deploymentId of ProcessDefinitionEntityImpl is most capable to use instead of modifiedDate of
+     * WorkflowDefinition
+     */
+    @Override
+    public ProcessDefinitionQuery orderByModifiedDate() {
+        return  orderByDeploymentId();
+    }
+
     // results ////////////////////////////////////////////
 
     @Override

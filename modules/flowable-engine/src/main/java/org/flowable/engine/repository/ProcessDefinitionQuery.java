@@ -197,4 +197,8 @@ public interface ProcessDefinitionQuery extends Query<ProcessDefinitionQuery, Pr
      */
     ProcessDefinitionQuery orderByTenantId();
 
+    ProcessDefinitionQuery orderByTitle();
+
+    ProcessDefinitionQuery orderByModifiedDate();
+
 }
