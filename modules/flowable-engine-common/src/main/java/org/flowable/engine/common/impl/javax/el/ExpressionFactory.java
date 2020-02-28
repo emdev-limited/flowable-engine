@@ -108,11 +108,16 @@ public abstract class ExpressionFactory {
 	 */
 	public static ExpressionFactory newInstance(Properties properties) {
 		ClassLoader classLoader;
-		try {
-			classLoader = Thread.currentThread().getContextClassLoader();
-		} catch (SecurityException e) {
+		/*
+		This is due to DEMO-78
+		Getting classloader from current thread caused exception with several use cases with timer in BP. СlassLoader
+		of ExpressionFactory seems to work fine
+		 */
+//		try {
+//			classLoader = Thread.currentThread().getContextClassLoader();
+//		} catch (SecurityException e) {
 			classLoader = ExpressionFactory.class.getClassLoader();
-		}
+//		}
 
 		String className = null;
 
