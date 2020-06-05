@@ -2,20 +2,23 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<name>Flowable</name>
-	<description>BPM and workflow engine</description>
-	<groupId>org.flowable</groupId>
-	<artifactId>flowable-root</artifactId>
-
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
 		<artifactId>oss-parent</artifactId>
 		<version>7</version>
 	</parent>
 
+	<name>Flowable</name>
+	<description>BPM and workflow engine</description>
+	<groupId>org.flowable</groupId>
+	<artifactId>flowable-root</artifactId>
+	<version>${revision}</version>
 	<packaging>pom</packaging>
-	<version>6.3.0-7.1.0-emdev</version>
+
 	<properties>
+
+		<revision>6.3.0-7.2.2-emdev</revision>
+
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<jdk.version>1.8</jdk.version>
 		<spring.framework.version>4.3.14.RELEASE</spring.framework.version>
@@ -962,6 +965,32 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>flatten-maven-plugin</artifactId>
+				<version>1.1.0</version>
+				<configuration>
+					<updatePomFile>true</updatePomFile>
+					<flattenMode>resolveCiFriendliesOnly</flattenMode>
+				</configuration>
+				<executions>
+					<execution>
+						<id>flatten</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>flatten</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>flatten.clean</id>
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.6.1</version>
